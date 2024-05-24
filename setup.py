@@ -11,12 +11,10 @@ setuptools.setup(
     description="package to control holomin flux microscope",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/ondrejstranik/viscope",
+    url="https://github.com/ondrejstranik/hmflux",
     packages = setuptools.find_packages(),
     install_requires = [
-        'numpy',
-        'PyQt5',
-        'napari'],
+        'pylablib'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

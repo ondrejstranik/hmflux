@@ -4,13 +4,13 @@ import pytest
 
 @pytest.mark.GUI
 def test_camera():
-    ''' check if web camera work'''
-    from spectralCamera.instrument.camera.webCamera.webCamera import WebCamera
+    ''' check if andor camera work'''
+    from hmac.instrument.camera.andorCamera  import AndorCamera
 
-    cam = WebCamera(name='WebCamera',filterType='RGGB')
+    cam = AndorCamera(name='AndorCamera')
     cam.connect()
     cam.setParameter('exposureTime',300)
-    cam.setParameter('nFrames', 5)
+    cam.setParameter('nFrames', 1)
 
     cam._displayStreamOfImages()
     cam.disconnect()
