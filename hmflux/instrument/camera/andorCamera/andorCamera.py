@@ -81,9 +81,13 @@ class AndorCamera(BaseCamera):
     def _setExposureTime(self,value): # ms
         # set the expression time
 
+        self.cam.stop_acquisition()
+
         print(f'set Exposure Time {value}')
         self.cam.set_exposure(value/1000)     
         self.exposureTime = value
+
+        self.cam.start_acquisition()
 
     def _getExposureTime(self):
         self.exposureTime = self.cam.get_exposure()*1000

@@ -9,7 +9,7 @@ def test_camera():
 
     cam = AndorCamera(name='AndorCamera')
     cam.connect()
-    #cam.setParameter('exposureTime',300)
+    cam.setParameter('exposureTime',300)
     cam.setParameter('nFrames', 1)
 
     cam._displayStreamOfImages()
