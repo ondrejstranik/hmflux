@@ -56,7 +56,7 @@ class AndorCamera(BaseCamera):
         self.cam.set_EMCCD_gain(AndorCamera.DEFAULT['gain'],advanced=False)
         self._setExposureTime(self.exposureTime)
 
-        cam.start_acquisition()
+        self.cam.start_acquisition()
 
         # get the camera optimal exposure time 
         self.exposureTime = self.getParameter('exposureTime')
@@ -70,7 +70,7 @@ class AndorCamera(BaseCamera):
         for _ in range(self.nFrame):
             temporary_frame = None
             self.cam.wait_for_frame()
-            _myframe = cam.read_oldest_image()
+            _myframe = self.cam.read_oldest_image()
             if myframe is None:
                 myframe = _myframe
             else:
