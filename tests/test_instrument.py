@@ -5,7 +5,7 @@ import pytest
 @pytest.mark.GUI
 def test_camera():
     ''' check if andor camera work'''
-    from hmac.instrument.camera.andorCamera  import AndorCamera
+    from hmflux.instrument.camera.andorCamera.andorCamera  import AndorCamera
 
     cam = AndorCamera(name='AndorCamera')
     cam.connect()

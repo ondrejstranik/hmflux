@@ -1,24 +1,12 @@
 '''
-class for live viewing spectral images
+main class for holo min flux
 '''
 #%%
 
 from viscope.main import viscope
 from viscope.gui.allDeviceGUI import AllDeviceGUI 
-from plim.gui.plasmonViewerGUI import PlasmonViewerGUI
-from plim.gui.positionTrackGUI import PositionTrackGUI
-from viscope.gui.cameraGUI import CameraGUI
-from viscope.gui.cameraViewGUI import CameraViewGUI
-from plim.gui.saveDataGUI import SaveDataGUI
 
-from viscope.instrument.virtual.virtualCamera import VirtualCamera
-from spectralCamera.algorithm.calibrateIFImage import CalibrateIFImage
-from spectralCamera.instrument.sCamera.sCamera import SCamera
-from viscope.instrument.virtual.virtualStage import VirtualStage
-from viscope.instrument.virtual.virtualPump import VirtualPump
-from plim.instrument.plasmonProcessor import PlasmonProcessor
-
-from plim.virtualSystem.plimMicroscope import PlimMicroscope
+from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
 
 import numpy as np
 from pathlib import Path
@@ -36,7 +24,7 @@ class HMFlux():
         viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
 
         #camera
-        camera = VirtualCamera(name='BWCamera')
+        camera = AndorCamera(name='AndorCamera')
         camera.connect()
         camera.setParameter('exposureTime', 300)
         camera.setParameter('nFrame', 1)
@@ -54,6 +42,6 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    Plim.run()
+    HMFlux.run()
 
 
