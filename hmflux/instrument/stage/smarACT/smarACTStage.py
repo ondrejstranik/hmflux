@@ -48,29 +48,25 @@ class SmarACTStage(BaseStage):
     None
     """
 
-    holdTime_ms = 60_000
-    axis_lookup_table = dict(X=0, Y=2, Z=1)
-    def __init__(self, positionerInfo, name, **lowLevelManagers):
+    DEFAULT =  {'name': 'smarACT Stage',
+                'holdTime_ms':60_000,
+                'axis_lookup_table': dict(X=0, Y=2, Z=1)
+    }
 
 
-        if 'holdTime' in positionerInfo.managerProperties:
-            self.holdTime_ms = positionerInfo.managerProperties['holdTime']
-        if 'axis_lookup_table' in positionerInfo.managerProperties:
-            self.axis_lookup_table = positionerInfo.managerProperties['axis_lookup_table']
+    def __init__(self,name=DEFAULT['name'],*args, **kwargs):
+        ''' stage initialisation'''
+        super().__init__(name=name,*args, **kwargs)
+
+
+        self.holdTime_ms = SmarACTStage.DEFAULT['holdTime_ms']
+        self.axis_lookup_table = SmarACTStage.DEFAULT['axis_lookup_table']
         # generate the inverse looup table for later use
         self.reverse_axis_lookup_table = {}
         for key, value in self.axis_lookup_table.items():
             self.reverse_axis_lookup_table[value] = key
 
-        super().__init__(positionerInfo, name, initialPosition={'X': 0, 'Y':0, 'Z':0})
-
-        self.__logger__ = logging.getLogger(name)
-        self.__logger__.setLevel(logging.DEBUG)
-        self.__logger__.debug('Connecting to stage')
         self.__setup_connection_and_buffers()
-        self.__logger__.debug('Connected to stage')
-
-
 
         self._position = self.position
 
@@ -101,12 +97,37 @@ class SmarACTStage(BaseStage):
         self.__logger__.info(
             "MCS address: {}".format(self.outBuffer[:18].decode("utf-8")))  # connect to first system of list
 
-    def finalize(self):
+    def disconnect(self):
         """ Disconnect the device.
 
         """
-        self.__logger__.info('Closing system')
+        super().disconnect()
         self.ExitIfError(SA_CloseSystem(self.mcsHandle))
+
+    def connect(self):
+        ''' connect to the device'''
+        super().connect()
+        self.__setup_connection_and_buffers()
+        self.set_low_vibration_mode()
+
+
+    def _getPosition(self):
+        ''' get position of the stage'''
+
+        ax1 = self.getPosition(X)
+        ax2 = self.getPosition(Y)
+        ax3 = self.getPosition(Z)
+        self.position = np.array((ax1,ax2,ax3))
+        return self.position
+
+    def _setPosition(self,newPosition):
+        ''' move the stage. wait until the movement is finished'''
+
+        self.setPosition(newPosition[0], axis= 'X', wait_for_it=True)
+        self.setPosition(newPosition[1], axis= 'Y', wait_for_it=True)
+        self.setPosition(newPosition[2], axis= 'Z', wait_for_it=True)
+
+        self._getPosition()
 
 
     def move(self, dist, axis):
@@ -140,7 +161,6 @@ class SmarACTStage(BaseStage):
         )
         if wait_for_it:
             self.wait_for_status()
-
 
     def set_closed_loop_max_speed(self, new_value, channel=None):
         """Set closed loop max speed, in mm per second"""
@@ -292,20 +312,3 @@ class SmarACTStage(BaseStage):
             xx = -xx ^ mask
         return xx
 
-
-
-# Copyright (C) 2020-2021 ImSwitch developers
-# This file is part of ImSwitch.
-#
-# ImSwitch is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# ImSwitch is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
