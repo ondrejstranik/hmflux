@@ -12,4 +12,18 @@ def test_camera():
     cam._displayStreamOfImages()
     cam.disconnect()
 
-test_camera()
+
+def test_smartACT():
+    from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
+
+    stage = SmarACTStage(name='SmarACT')
+    stage.connect()
+    myPosition =stage.getParameter('position')
+    print(f'myPosition ={myPosition}')
+
+    print(f'myPosition ={myPosition}')
+
+    stage.disconnect()
+
+#test_camera()
+test_smartACT()

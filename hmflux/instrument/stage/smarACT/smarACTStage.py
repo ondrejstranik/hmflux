@@ -13,7 +13,7 @@ except ImportError:
 import ctypes as ct
 MU2NM = 1e3 # micrometer to nanometer
 
-class StageStatusException(BaseStage):
+class StageStatusException(BaseException):
     """Custom exception"""
     pass
 
@@ -66,9 +66,8 @@ class SmarACTStage(BaseStage):
         for key, value in self.axis_lookup_table.items():
             self.reverse_axis_lookup_table[value] = key
 
-        self.__setup_connection_and_buffers()
 
-        self._position = self.position
+        #self._position = self.position
 
     def ExitIfError(self, status):
         # init error_msg variable
@@ -91,11 +90,15 @@ class SmarACTStage(BaseStage):
         self.ExitIfError(
             SA_FindSystems("", self.outBuffer, self.ioBufferSize)
         )
+        print('system found')
         self.ExitIfError(
             SA_OpenSystem(self.mcsHandle, self.outBuffer, bytes("sync", "utf-8"))
         )
-        self.__logger__.info(
+
+        print(
             "MCS address: {}".format(self.outBuffer[:18].decode("utf-8")))  # connect to first system of list
+
+
 
     def disconnect(self):
         """ Disconnect the device.
@@ -108,15 +111,15 @@ class SmarACTStage(BaseStage):
         ''' connect to the device'''
         super().connect()
         self.__setup_connection_and_buffers()
-        self.set_low_vibration_mode()
+        #self.set_low_vibration_mode()
 
 
     def _getPosition(self):
         ''' get position of the stage'''
 
-        ax1 = self.getPosition(X)
-        ax2 = self.getPosition(Y)
-        ax3 = self.getPosition(Z)
+        ax1 = self.getPosition('X')
+        ax2 = self.getPosition('Y')
+        ax3 = self.getPosition('Z')
         self.position = np.array((ax1,ax2,ax3))
         return self.position
 
@@ -238,15 +241,15 @@ class SmarACTStage(BaseStage):
                 )
             )
 
-    @property
-    def position(self) -> Dict[str, float]:
-        self.axis_lookup_table.items()
-        pos = np.array([self.getPosition(a) for a in 'XYZ'])
-        positions = {}
-        for ax, p in zip(self.axes, pos):
-            positions[ax] = p
-        self._position = positions
-        return positions
+    #@property
+    #def position(self) -> Dict[str, float]:
+    #    self.axis_lookup_table.items()
+    #    pos = np.array([self.getPosition(a) for a in 'XYZ'])
+    #    positions = {}
+    #    for ax, p in zip(self.axes, pos):
+    #        positions[ax] = p
+    #    self._position = positions
+    #    return positions
 
     def _get_position_channel(self, channel):
         """Get position for channel channel. """
@@ -301,7 +304,7 @@ class SmarACTStage(BaseStage):
             error_message = (
                 f"MCS error: {error_msg.value[:].decode('utf-8')} \n Err code {status}"
             )
-            self.__logger__.error(error_message)
+
             raise StageStatusException(error_message)
         return status
 
