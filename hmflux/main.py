@@ -4,7 +4,8 @@ main class for holo min flux
 #%%
 
 from viscope.main import viscope
-from viscope.gui.allDeviceGUI import AllDeviceGUI 
+from viscope.gui.allDeviceGUI import AllDeviceGUI    
+from hmflux.gui.saveImageGUI import SaveImageGUI
 
 from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
 
@@ -33,6 +34,8 @@ class HMFlux():
         # set GUIs
         viewer  = AllDeviceGUI(viscope)
         viewer.setDevice([camera])
+        newGUI  = SaveImageGUI(viscope)
+        newGUI.setDevice(camera)
 
         # main event loop
         viscope.run()
