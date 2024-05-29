@@ -4,7 +4,7 @@ import pytest
 
 @pytest.mark.GUI
 def test_saveImageGUI():
-    ''' testing the viewer with webcam'''
+    ''' testing the viewer with virtual camera'''
 
     from viscope.main import viscope
     from viscope.gui.allDeviceGUI import AllDeviceGUI
@@ -27,3 +27,37 @@ def test_saveImageGUI():
     viscope.run()
 
     camera.disconnect()
+
+
+@pytest.mark.GUI
+def test_slmGUI():
+    ''' testing the slmgui'''
+
+    from viscope.main import viscope
+    #from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
+    from viscope.instrument.virtual.virtualSLM import VirtualSLM
+    
+    from hmflux.gui.slmGUI import SLMGui
+
+    #slm = ScreenSLM()
+    slm = VirtualSLM()
+    slm.connect()
+
+    # add gui
+    newGUI  = SLMGui(viscope)
+    newGUI.setDevice(slm)
+
+    # main event loop
+    viscope.run()
+
+    slm.disconnect()
+
+
+
+
+def test_SLMViewer():
+    ''' testing the slm viewer'''
+    from hmflux.gui.slmViewer import SLMViewer
+
+    sv = SLMViewer()
+    sv.run()
