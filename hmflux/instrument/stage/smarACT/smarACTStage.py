@@ -50,7 +50,7 @@ class SmarACTStage(BaseStage):
 
     DEFAULT =  {'name': 'smarACT Stage',
                 'holdTime_ms':60_000,
-                'axis_lookup_table': dict(X=0, Y=2, Z=1)
+                'axis_lookup_table': dict(X=0, Y=1, Z=2)
     }
 
 
@@ -111,6 +111,11 @@ class SmarACTStage(BaseStage):
         ''' connect to the device'''
         super().connect()
         self.__setup_connection_and_buffers()
+
+        initialStagePosition = self.getParameter('position')
+
+        print(f"initial position {initialStagePosition}")
+
         #self.set_low_vibration_mode()
 
 
@@ -151,7 +156,6 @@ class SmarACTStage(BaseStage):
         return self._get_position_channel(self.axis_lookup_table[axis])
 
     def setPosition(self, position: float, axis: str, wait_for_it=True):
-        self.__logger__.info(f'Moving axis {axis} to {position}')
         axis_num = self.axis_lookup_table[axis]
         t = position * MU2NM
         self.ExitIfError(

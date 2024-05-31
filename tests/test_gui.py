@@ -52,7 +52,24 @@ def test_SLMGUI():
 
     slm.disconnect()
 
+def test_smarACTStage():
+    ''' check if smarACT stage in gui works'''
+    from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
 
+    from viscope.main import viscope
+    from viscope.gui.allDeviceGUI import AllDeviceGUI
+
+    stage = SmarACTStage()
+    stage.connect()
+
+    # add gui
+    viewer  = AllDeviceGUI(viscope)
+    viewer.setDevice(stage)
+
+    # main event loop
+    viscope.run()
+
+    stage.disconnect()
 
 
 def test_SLMViewer():

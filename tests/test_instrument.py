@@ -33,3 +33,40 @@ def test_screenSLM():
 
     slm.disconnect()
 
+def test_smarACTStage():
+    ''' check if smarACT stage works'''
+    from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
+    import time
+    import numpy as np
+
+    stage = SmarACTStage()
+    stage.connect()
+
+    mP = stage.getParameter('position')
+    print(f'position = {mP}')
+    stage.setParameter('position', mP+1)
+
+    mP = stage.getParameter('position')
+    print(f'new position = {mP}')
+
+    stage.disconnect()
+
+@pytest.mark.GUI
+def test_smarACTStage():
+    ''' check if smarACT stage in gui works'''
+    from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
+
+    from viscope.main import viscope
+    from viscope.gui.allDeviceGUI import AllDeviceGUI
+
+    stage = SmarACTStage()
+    stage.connect()
+
+    # add gui
+    viewer  = AllDeviceGUI(viscope)
+    viewer.setDevice(stage)
+
+    # main event loop
+    viscope.run()
+
+    stage.disconnect()
