@@ -19,7 +19,7 @@ class ImageSLM:
 
         self.clip = self.DEFAULT['clip']
         
-    def clip(self,image):
+    def clipValue(self,image):
         if self.clip:
             image[image<self.DEFAULT['clipMin']] = self.DEFAULT['clipMin']
             image[image>self.DEFAULT['clipMax']] = self.DEFAULT['clipMax']
@@ -40,26 +40,26 @@ class ImageSLM:
         self.generateConstant()
 
     def generateConstant(self,value=0):
-        self.image = self.clip(np.zeros((self.sizeY,self.sizeX)).astype('uint8') + value)
+        self.image = self.clipValue(np.zeros((self.sizeY,self.sizeX)) + value)
         return self.image
 
     def generateSinGrating(self,stepIdx=0,nStep= 10):
         ''' sinus grating'''
         # set testing image (for internal use only)
         X,Y = np.meshgrid(np.linspace(0,self.sizeX,self.sizeX),np.linspace(0,self.sizeY,self.sizeY))
-        self.image = self.clip(np.round((2**8-1)*(0.5+0.5*np.sin(2*np.pi*X/50+1.0*stepIdx/nStep*np.pi))).astype('uint8'))
+        self.image = self.clipValue(np.round((2**8-1)*(0.5+0.5*np.sin(2*np.pi*X/50+1.0*stepIdx/nStep*np.pi))).astype('uint8'))
 
         return self.image
 
     def generateBinaryGrating(self,axis=0,val0=0,val1=255):
         ''' binary grating '''
         
-        im  = np.zeros((self.sizeY,self.sizeX)).astype('uint8') + val0
+        im  = np.zeros((self.sizeY,self.sizeX))+ val0
         if axis == 0:
             im[::2,:]= val1
         else:
             im[:,::2]= val1
-        self.image = self.clip(im)
+        self.image = self.clipValue(im)
 
         return im
 
@@ -68,7 +68,7 @@ class ImageSLM:
 
         # define background
         if bcgImage is None:
-            im = np.zeros((self.sizeY,self.sizeX)).astype('uint8')
+            im = np.zeros((self.sizeY,self.sizeX))
         else:
             im = bcgImage
 
@@ -84,7 +84,7 @@ class ImageSLM:
             im[:,position-halfwidth:position]= val0
             im[:,position:position+halfwidth]= val1 
         
-        self.image = self.clip(im)
+        self.image = self.clipValue(im)
 
         return im
 
@@ -98,6 +98,6 @@ if __name__ == '__main__':
 
 
 
-
+#%%
 
 

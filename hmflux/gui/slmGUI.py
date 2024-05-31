@@ -47,15 +47,22 @@ class SLMGUI(BaseGUI):
         self.vWindow.addMainGUI(self.viewer.window._qt_window, name=self.DEFAULT['nameGUI'])
 
         # add new layer
-        self.onDeviceImageLayer = self.viewer.add_image(np.zeros((2,2)), name='onDeviceImage')
+        self.onDeviceImageLayer = self.viewer.add_image(
+            np.zeros((2,2)), name='onDeviceImage', colormap='green',
+            contrast_limits= (0,255), opacity=0.5)
      
         # connect signal from slmviewer for liveupdate
         self.slmViewer.sinWaveGui.changed.connect(
-            lambda: self._liveUpdate() if self.liveUpdate else None
-            )
+            lambda: self._liveUpdate() if self.liveUpdate else None)
         self.slmViewer.binaryGui.changed.connect(
-            lambda: self._liveUpdate() if self.liveUpdate else None
-            )
+            lambda: self._liveUpdate() if self.liveUpdate else None)
+        self.slmViewer.choiceGui.changed.connect(
+            lambda: self._liveUpdate() if self.liveUpdate else None)
+        self.slmViewer.constGui.changed.connect(
+            lambda: self._liveUpdate() if self.liveUpdate else None)
+        self.slmViewer.box1Gui.changed.connect(
+            lambda: self._liveUpdate() if self.liveUpdate else None)
+
 
     def setDevice(self,device):
         super().setDevice(device)

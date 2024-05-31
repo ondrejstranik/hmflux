@@ -34,13 +34,13 @@ def test_SLMGUI():
     ''' testing the slmgui'''
 
     from viscope.main import viscope
-    #from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
-    from viscope.instrument.virtual.virtualSLM import VirtualSLM
+    from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
+    #from viscope.instrument.virtual.virtualSLM import VirtualSLM
     
     from hmflux.gui.slmGUI import SLMGUI
 
-    #slm = ScreenSLM()
-    slm = VirtualSLM()
+    slm = ScreenSLM()
+    #slm = VirtualSLM()
     slm.connect()
 
     # add gui

@@ -24,6 +24,9 @@ class ScreenSLM(BaseSLM):
         
         self._testImage = None
 
+        # restrict the slm value to 0-255
+        self.image = np.zeros((self.sizeY,self.sizeX))
+
 
     def connect(self,**kwargs):
         ''' connect to the instrument '''
@@ -46,7 +49,7 @@ class ScreenSLM(BaseSLM):
         self.slm.close()
     
     def setImage(self,image):
-        self.image = image
+        self.image = image.astype('uint8')
         self.slm.updateArray(self.image)
 
 
