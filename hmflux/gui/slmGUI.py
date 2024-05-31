@@ -7,7 +7,7 @@ from hmflux.gui.slmViewer import SLMViewer
 from magicgui import magicgui
 import numpy as np
 
-class SLMGui(BaseGUI):
+class SLMGUI(BaseGUI):
     ''' main class to show control SLM'''
 
     DEFAULT = {'nameGUI': 'slm'}
@@ -19,7 +19,7 @@ class SLMGui(BaseGUI):
         self.liveUpdate = False
 
         # prepare the gui of the class
-        SLMGui.__setWidget(self) 
+        SLMGUI.__setWidget(self) 
 
     def _liveUpdate(self):
         ''' internal use. set the image on the slm 
@@ -32,14 +32,14 @@ class SLMGui(BaseGUI):
         ''' prepare the gui '''
 
         @magicgui()
-        def parameterSLMGui(liveUpdate = self.liveUpdate):
+        def parameterSLMGUI(liveUpdate = self.liveUpdate):
             
             self.liveUpdate = liveUpdate 
             self._liveUpdate()
 
         # add widget parameterCameraGui 
-        self.parameterSLMGui = parameterSLMGui
-        self.dw =self.vWindow.addParameterGui(self.parameterSLMGui,name=self.DEFAULT['nameGUI'])
+        self.parameterSLMGUI = parameterSLMGUI
+        self.dw =self.vWindow.addParameterGui(self.parameterSLMGUI,name=self.DEFAULT['nameGUI'])
 
         # add widget slmviewer 
         self.slmViewer = SLMViewer(show=False)

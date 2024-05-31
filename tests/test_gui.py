@@ -30,21 +30,21 @@ def test_saveImageGUI():
 
 
 @pytest.mark.GUI
-def test_slmGUI():
+def test_SLMGUI():
     ''' testing the slmgui'''
 
     from viscope.main import viscope
     #from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
     from viscope.instrument.virtual.virtualSLM import VirtualSLM
     
-    from hmflux.gui.slmGUI import SLMGui
+    from hmflux.gui.slmGUI import SLMGUI
 
     #slm = ScreenSLM()
     slm = VirtualSLM()
     slm.connect()
 
     # add gui
-    newGUI  = SLMGui(viscope)
+    newGUI  = SLMGUI(viscope)
     newGUI.setDevice(slm)
 
     # main event loop
