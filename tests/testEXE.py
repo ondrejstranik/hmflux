@@ -1,29 +1,25 @@
 ''' camera unitest '''
 
-def test_camera():
-    ''' check if andor camera work'''
-    from hmflux.instrument.camera.andorCamera.andorCamera  import AndorCamera
+def test_SLMGUI():
+    ''' testing the slmgui'''
 
-    cam = AndorCamera(name='AndorCamera')
-    cam.connect()
-    cam.setParameter('exposureTime',300)
-    cam.setParameter('nFrames', 1)
+    from viscope.main import viscope
+    from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
+    #from viscope.instrument.virtual.virtualSLM import VirtualSLM
+    
+    from hmflux.gui.slmGUI import SLMGUI
 
-    cam._displayStreamOfImages()
-    cam.disconnect()
+    slm = ScreenSLM()
+    #slm = VirtualSLM()
+    slm.connect()
 
+    # add gui
+    newGUI  = SLMGUI(viscope)
+    newGUI.setDevice(slm)
 
-def test_smartACT():
-    from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
+    # main event loop
+    viscope.run()
 
-    stage = SmarACTStage(name='SmarACT')
-    stage.connect()
-    myPosition =stage.getParameter('position')
-    print(f'myPosition ={myPosition}')
+    slm.disconnect()
 
-    print(f'myPosition ={myPosition}')
-
-    stage.disconnect()
-
-#test_camera()
-test_smartACT()
+test_SLMGUI()

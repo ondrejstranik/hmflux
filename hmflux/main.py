@@ -21,6 +21,7 @@ class HMFlux():
 
         from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
         from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
+        from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
 
 
         # some global settings
@@ -33,9 +34,21 @@ class HMFlux():
         camera.setParameter('nFrame', 1)
         camera.setParameter('threadingNow',True)
 
+        # slm
+        slm = ScreenSLM('slm')
+        slm.connect()
+
+        # stage
+        stage = SmarACTStage('stage')
+        stage.connect()
+
+
+
         # set GUIs
         viewer  = AllDeviceGUI(viscope)
-        viewer.setDevice([camera])
+        viewer.setDevice([stage,camera])
+        newGUI = SLMGUI(viscope)
+        newGUI.setDevice(slm)
         newGUI  = SaveImageGUI(viscope)
         newGUI.setDevice(camera)
 
@@ -43,6 +56,8 @@ class HMFlux():
         viscope.run()
 
         camera.disconnect()
+        stage.disconnect()
+        slm.disconnect()        
 
 
     @classmethod
@@ -89,6 +104,6 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    HMFlux.runVirtual()
+    HMFlux.runReal()
 
-
+#%%
