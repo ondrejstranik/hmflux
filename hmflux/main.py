@@ -20,6 +20,7 @@ class HMFlux():
         '''  set the all the parameter and then run the GUI'''
 
         from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
+        from hmflux.instrument.camera.avCamera.avCamera import AVCamera        
         from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
         from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
 
@@ -34,6 +35,13 @@ class HMFlux():
         camera.setParameter('nFrame', 1)
         camera.setParameter('threadingNow',True)
 
+        #camera 2
+        camera2 = AVCamera(name='AVCamera')
+        camera2.connect()
+        camera2.setParameter('exposureTime', 50)
+        camera2.setParameter('nFrame', 1)
+        camera2.setParameter('threadingNow',True)
+
         # slm
         slm = ScreenSLM('slm')
         slm.connect()
@@ -46,7 +54,7 @@ class HMFlux():
 
         # set GUIs
         viewer  = AllDeviceGUI(viscope)
-        viewer.setDevice([stage,camera])
+        viewer.setDevice([stage,camera,camera2])
         newGUI = SLMGUI(viscope)
         newGUI.setDevice(slm)
         newGUI  = SaveImageGUI(viscope)
