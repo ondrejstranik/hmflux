@@ -52,7 +52,7 @@ class AndorCamera(BaseCamera):
         self.cam.set_acquisition_mode(AndorCamera.DEFAULT['acquisitionMode'])
         self.cam.set_fan_mode(AndorCamera.DEFAULT['funMode'])
         self.cam.set_trigger_mode(AndorCamera.DEFAULT['triggerMode'])
-        self.cam.set_exposure(0.0005)
+        #self.cam.set_exposure(0.0005)
         self.cam.set_EMCCD_gain(AndorCamera.DEFAULT['gain'],advanced=False)
         self._setExposureTime(self.exposureTime)
 

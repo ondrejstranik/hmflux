@@ -3,7 +3,7 @@
 import pytest
 
 @pytest.mark.GUI
-def test_camera():
+def test_AndorCamera():
     ''' check if andor camera work'''
     from hmflux.instrument.camera.andorCamera.andorCamera  import AndorCamera
 
@@ -14,6 +14,39 @@ def test_camera():
 
     cam._displayStreamOfImages()
     cam.disconnect()
+
+def test_AVCamera():
+    ''' check if andor camera work'''
+    from hmflux.instrument.camera.avCamera.avCamera import AVCamera
+
+    cam = AVCamera(name='AVCamera')
+    cam.connect()
+    cam.setParameter('exposureTime',10)
+    cam.setParameter('nFrames', 3)
+
+    cam._displayStreamOfImages()
+    cam.disconnect()
+
+def test_AVCameraGui():
+    from viscope.main import viscope
+    from viscope.gui.allDeviceGUI import AllDeviceGUI
+    from hmflux.instrument.camera.avCamera.avCamera import AVCamera
+
+    camera = AVCamera()
+    camera.connect()
+    camera.setParameter('exposureTime',300)
+    camera.setParameter('nFrame', 1)
+    camera.setParameter('threadingNow',True)
+
+    # add gui
+    viewer  = AllDeviceGUI(viscope)
+    viewer.setDevice(camera)
+
+    # main event loop
+    viscope.run()
+
+    camera.disconnect()
+
 
 @pytest.mark.GUI
 def test_screenSLM():
