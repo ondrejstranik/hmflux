@@ -43,11 +43,11 @@ class ImageSLM:
         self.image = self.clipValue(np.zeros((self.sizeY,self.sizeX)) + value)
         return self.image
 
-    def generateSinGrating(self,stepIdx=0,nStep= 10):
+    def generateSinGrating(self,stepIdx=0,nStep= 10,period=50):
         ''' sinus grating'''
         # set testing image (for internal use only)
         X,Y = np.meshgrid(np.linspace(0,self.sizeX,self.sizeX),np.linspace(0,self.sizeY,self.sizeY))
-        self.image = self.clipValue(np.round((2**8-1)*(0.5+0.5*np.sin(2*np.pi*X/50+1.0*stepIdx/nStep*np.pi))).astype('uint8'))
+        self.image = self.clipValue(np.round((2**8-1)*(0.5+0.5*np.sin(2*np.pi*X/period+1.0*stepIdx/nStep*np.pi))).astype('uint8'))
 
         return self.image
 

@@ -41,7 +41,8 @@ class SLMViewer():
         if self.imageType == 'sinus':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
             im += self.imageSLM.generateSinGrating(self.sinWaveGui.stepIdx.value,
-                                                   self.sinWaveGui.nStep.value)
+                                                   self.sinWaveGui.nStep.value,
+                                                   self.sinWaveGui.period.value)
 
         if self.imageType == 'binary':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
@@ -83,8 +84,9 @@ class SLMViewer():
             self.generateImage()
 
         @magicgui(auto_call= 'True',
-                  stepIdx={"widget_type": "Slider", "min":-20, "max": 20})
-        def sinWaveGui(stepIdx = 0, nStep = 10):
+                  stepIdx={"widget_type": "Slider", "min":-20, "max": 20},
+                  period={"widget_type": "Slider", "min":2, "max": 512})
+        def sinWaveGui(stepIdx = 0, nStep = 10, period = 50):
             sinWaveGui.stepIdx.min = -2*sinWaveGui.nStep.value
             sinWaveGui.stepIdx.max =  2*sinWaveGui.nStep.value
             
