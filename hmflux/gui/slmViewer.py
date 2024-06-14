@@ -85,8 +85,9 @@ class SLMViewer():
 
         @magicgui(auto_call= 'True',
                   stepIdx={"widget_type": "Slider", "min":-20, "max": 20},
-                  period={"widget_type": "Slider", "min":2, "max": 512})
-        def sinWaveGui(stepIdx = 0, nStep = 10, period = 50):
+                  period={"widget_type": "Slider", "min":2, "max": 512},
+                  spectrumShift={"widget_type": "SpinBox", "min":0, "max": 256})
+        def sinWaveGui(stepIdx = 0, nStep = 10, period = 50, spectrumShift=0):
             sinWaveGui.stepIdx.min = -2*sinWaveGui.nStep.value
             sinWaveGui.stepIdx.max =  2*sinWaveGui.nStep.value
             
