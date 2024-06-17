@@ -42,7 +42,8 @@ class SLMViewer():
             im = self.imageSLM.generateConstant(self.constGui.const.value)
             im += self.imageSLM.generateSinGrating(self.sinWaveGui.stepIdx.value,
                                                    self.sinWaveGui.nStep.value,
-                                                   self.sinWaveGui.period.value)
+                                                   self.sinWaveGui.period.value,
+                                                   self.sinWaveGui.spectrumShift.value)
 
         if self.imageType == 'binary':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
