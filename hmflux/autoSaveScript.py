@@ -7,6 +7,8 @@ from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
 from hmflux.algorithm.imageSLM import ImageSLM
 import numpy as np
 
+import keyboard
+
 class AutoSave():
     def __init__(self):
         #camera
@@ -56,6 +58,8 @@ class AutoSave():
         self.boxHalfwidth = 6
         self.bcgImage = None
 
+        print('Press q if stage is stuck')
+
         self.mkdir()
 
     def mkdir(self,path):
@@ -103,9 +107,10 @@ class AutoSave():
             self.boxImage.append(self.rawBox)
 
             self.stage.move(self.stageMove,self.axis)
-        
 
-
+            if keyboard.is_pressed('q'):
+                print("Loop terminated")
+            break
 
 autoSave = AutoSave()
 autoSave.record()
