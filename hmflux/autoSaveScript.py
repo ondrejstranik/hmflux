@@ -12,12 +12,15 @@ import numpy as np
 
 import keyboard
 
+
+'''don t forget check the save folder!!!!! data will be overlap!!!'''
+
 class AutoSave():
     def __init__(self):
         #camera
         self.camera = AndorCamera(name='AndorCamera')
         self.camera.connect()
-        self.camera.setParameter('exposureTime', 300)
+        self.camera.setParameter('exposureTime', 500)
         self.camera.setParameter('nFrame', 1)
         #self.camera.setParameter('threadingNow',True)
 
@@ -29,13 +32,13 @@ class AutoSave():
         self.stage = SmarACTStage('stage')
         self.stage.connect()
         #all parameters
-        self.folderName = '20240620-1'
+        self.folderName = '20240624-half2'
         self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
         #stage parameter
-        self.stageX = 0
-        self.stageY = 0.1
+        self.stageX = 0.02
+        self.stageY = 0
         self.stageZ = 0
         # self.stageMove = np.array((self.stageX,self.stageY,self.stageZ))
         # self.axis = ['X', 'Y', 'Z']
@@ -51,12 +54,12 @@ class AutoSave():
 
         self.constantValue = 0
         self.binaryValue0 = 0
-        self.binaryValue1 = 255
+        self.binaryValue1 = 133
         self.boxAxis = 0
-        self.boxPosition = 0
-        self.boxValue0 = 0
-        self.boxValue1 = 255
-        self.boxHalfwidth = 6
+        self.boxPosition = 187
+        self.boxValue0 = 3
+        self.boxValue1 = 86
+        self.boxHalfwidth = 2
         self.bcgImage = None
 
         print('Press q if stage is stuck')
@@ -123,7 +126,7 @@ if __name__ == '__main__':
     import napari
 
     autoSave = AutoSave()
-    numberOfImage = 10
+    numberOfImage = 200
     autoSave.record(numberOfImage)
     print('record done')
     autoSave.save()

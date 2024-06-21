@@ -148,7 +148,6 @@ class SmarACTStage(BaseStage):
         """
 
         current_position = self.getPosition(axis=axis)
-        # self.__logger__.info(f'Moving axis {axis} by {dist}. Current position {current_position}')
         new_position = current_position + dist
         self.setPosition(new_position, axis)
 
