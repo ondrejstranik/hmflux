@@ -4,8 +4,8 @@ import os
 import numpy as np
 from pathlib import Path
 
-path = r'C:\Users\ZihaoXiao\Documents\GitHub\hmflux\hmflux\DATA\20240624-half2'
-pathConsant = (path+'./'+'Constant')
+path = r'C:\Users\ZihaoXiao\Documents\GitHub\hmflux\hmflux\DATA\20240624-marker-1-hw1'
+pathConsant = (path+'./'+'Binary')
 pathBox = (path+'./'+'Box')
 
 
@@ -27,6 +27,6 @@ for ii in range(nFile):
 
 
 viewer = napari.Viewer()
-viewer.add_image(np.array(constantImage), name='const')
-viewer.add_image(np.array(boxImage), name='block')
+viewer.add_image(np.array(constantImage), name='binary')
+viewer.add_image(np.array(boxImage), name='box')
 napari.run()
