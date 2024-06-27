@@ -33,12 +33,14 @@ class AutoSave():
         self.stage = SmarACTStage('stage')
         self.stage.connect()
         #all parameters
-        self.folderName = '20240624-marker-1-hw1'
+        self.folderName = '20240627-saveTest-slmImage-6'
         self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
         self.pathBinary = Path(self.path+'./'+'Binary')
         self.pathBox = Path(self.path+'./'+'Box')
+        # self.pathSLMBi = Path(self.path+'./'+'SLMBi')
+        # self.pathSLMBox = Path(self.path+'./'+'SLMBox')
         self.fileName = 'Image'
 
 
@@ -63,7 +65,7 @@ class AutoSave():
         self.binaryValue0 = 0
         self.binaryValue1 = 134
         self.boxAxis = 0
-        self.boxPosition = 250
+        self.boxPosition = 256
         self.boxValue0 = 0
         self.boxValue1 = 102
         self.boxHalfwidth = 1
@@ -81,6 +83,8 @@ class AutoSave():
             os.makedirs(self.path)
             os.makedirs(self.path+'./'+'Binary')
             os.makedirs(self.path+'./'+'Box')
+            # os.makedirs(self.path+'./'+'SLMBi')
+            # os.makedirs(self.path+'./'+'SLMBox')
                         
         else:
             print('please create a new folder')
@@ -96,34 +100,39 @@ class AutoSave():
 
 
     def record(self):
-        for ii in range(self.numberOfImage):
-            #binary
-            # slmImage = np.zeros([self.sizeX,self.sizeY])
-            print(f'recording {ii} image')
-            slmImage = self.imageSLM.generateConstant(self.constantValue)
-            slmImage += self.imageSLM.generateBinaryGrating(self.binaryAxis,self.binaryValue0,self.binaryValue1)
-            self.slm.setImage(slmImage)
-            # time.sleep(0.3)
-            self.rawBinary = self.camera.getLastImage()
-            # self.binaryImage.append(self.rawBinary)
+        slmImageBi = self.imageSLM.generateConstant(self.constantValue)
+        slmImageBi += self.imageSLM.generateBinaryGrating(self.binaryAxis,self.binaryValue0,self.binaryValue1)
 
-            np.save(str(self.pathBinary / self.fileName) + f'_{ii}',self.rawBinary)
-            
-            
-            #box1
-            slmImage = self.imageSLM.generateConstant(self.constantValue)
-            slmImage += self.imageSLM.generateBinaryGrating(1-self.boxAxis,self.binaryValue0,self.binaryValue1)
-            slmImage += self.imageSLM.generateBox1(axis=self.boxAxis,
+        slmImageBox = self.imageSLM.generateConstant(self.constantValue)
+        slmImageBox += self.imageSLM.generateBinaryGrating(1-self.boxAxis,self.binaryValue0,self.binaryValue1)
+        slmImageBox += self.imageSLM.generateBox1(axis=self.boxAxis,
                                             position=self.boxPosition,
                                             val0=self.boxValue0,
                                             val1=self.boxValue1,
                                             halfwidth=self.boxHalfwidth,
-                                            bcgImage=slmImage)
-            self.slm.setImage(slmImage)
+                                            bcgImage=slmImageBox)
+        for ii in range(self.numberOfImage):
+            #binary
+            # slmImage = np.zeros([self.sizeX,self.sizeY])
+            print(f'recording {ii} image')
+            self.slm.setImage(slmImageBi)
             # time.sleep(0.3)
+            # TODO: try this
+            self.camera.stopAcquisitionTest()
+            self.camera.startAcquisitionTest()
+            self.rawBinary = self.camera.getLastImage()
+            # self.binaryImage.append(self.rawBinary)
+            np.save(str(self.pathBinary / self.fileName) + f'_{ii:03d}',self.rawBinary)
+            
+            #box1
+            self.slm.setImage(slmImageBox)
+            # time.sleep(0.3)
+            # TODO: try this
+            self.camera.stopAcquisitionTest()
+            self.camera.startAcquisitionTest()
             self.rawBox = self.camera.getLastImage()
             # self.boxImage.append(self.rawBox)
-            np.save(str(self.pathBox/ self.fileName) + f'_{ii}',self.rawBox)
+            np.save(str(self.pathBox/ self.fileName) + f'_{ii:03d}',self.rawBox)
 
             if self.stageX != 0:
                 self.stage.move(self.stageX,'X')
