@@ -4,7 +4,7 @@ import os
 import numpy as np
 from pathlib import Path
 
-path = r'C:\Users\ZihaoXiao\Documents\GitHub\hmflux\hmflux\DATA\20240627-saveTest-slmImage-6'
+path = r'C:\Users\ZihaoXiao\Documents\GitHub\hmflux\hmflux\DATA\20240628-qtd-2'
 pathConsant = (path+'./'+'Binary')
 pathBox = (path+'./'+'Box')
 # pathSLMBi = (path+'./'+'SLMBi')
@@ -17,19 +17,28 @@ boxImage = []
 # slmBi = []
 # slmBox = []
 
-nFile = len(os.listdir(pathBox))
-filenameConst = 'Image_{}.npy'
-filenameBox = filenameConst
-filenameSLMBi = filenameConst
-filenameSLMBox = filenameConst
+filenames = os.listdir(pathBox)
+
+# nFile = len(os.listdir(pathBox))
+# filenameConst = 'Image_{}.npy'
+# filenameBox = filenameConst
+# filenameSLMBi = filenameConst
+# filenameSLMBox = filenameConst
 
 #%%
 
-for ii in range(nFile):
-    cImage = np.load(pathConsant+'./'+filenameConst.format(ii))
+for filename in filenames:
+    cImage = np.load(pathConsant+'./'+filename)
     constantImage.append(cImage)
-    bImage = np.load(pathBox+'/'+filenameBox.format(ii))
+    bImage = np.load(pathBox+'./'+filename)
     boxImage.append(bImage)
+
+
+# for ii in range(nFile):
+#     cImage = np.load(pathConsant+'./'+filenameConst.format(ii))
+#     constantImage.append(cImage)
+#     bImage = np.load(pathBox+'/'+filenameBox.format(ii))
+#     boxImage.append(bImage)
 
     # SLMBiImage = np.load(pathSLMBi+'./'+filenameSLMBi.format(ii))
     # slmBi.append(SLMBiImage)
