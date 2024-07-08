@@ -33,7 +33,7 @@ class AutoSave():
         self.stage = SmarACTStage('stage')
         self.stage.connect()
         #all parameters
-        self.folderName = '20240628-qtd-2'
+        self.folderName = '20240708-test'
         self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
@@ -45,7 +45,7 @@ class AutoSave():
 
 
         #stage parameter
-        self.stageX = 0.05
+        self.stageX = 0.5
         self.stageY = 0
         self.stageZ = 0
         # self.stageMove = np.array((self.stageX,self.stageY,self.stageZ))
@@ -65,7 +65,7 @@ class AutoSave():
         self.binaryValue0 = 0
         self.binaryValue1 = 134
         self.boxAxis = 0
-        self.boxPosition = 310
+        self.boxPosition = 300
         self.boxValue0 = 0
         self.boxValue1 = 102
         self.boxHalfwidth = 3

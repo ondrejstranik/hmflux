@@ -4,7 +4,7 @@ import os
 import numpy as np
 from pathlib import Path
 
-path = r'C:\Users\ZihaoXiao\Documents\GitHub\hmflux\hmflux\DATA\20240628-qtd-2'
+path = r'.\hmflux\DATA\20240708-test'
 pathConsant = (path+'./'+'Binary')
 pathBox = (path+'./'+'Box')
 # pathSLMBi = (path+'./'+'SLMBi')
