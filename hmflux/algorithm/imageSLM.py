@@ -101,7 +101,7 @@ class ImageSLM:
 
         return im
 
-    def generateBox1(self,axis=0,position= None, val0=0,val1=255,halfwidth=6,bcgImage=None):
+    def generateBox1(self,axis=0,position= None, val0=0,val1=255,halfwidth=3,bcgImage=None):
         ''' box generation for minima'''
 
         # define background
@@ -121,6 +121,38 @@ class ImageSLM:
         else:
             im[:,position-halfwidth:position]= val0
             im[:,position:position+halfwidth]= val1 
+        
+        self.image = self.clipValue(im)
+
+        return im
+    
+    def generateBox2(self,axis=0,position= None, val0=0,val1=255,weightFactor=0,compensation=0,halfwidth=2,bcgImage=None):
+        ''' type2 box generation for minima'''
+
+        # define background
+        if bcgImage is None:
+            im = np.zeros((self.sizeY,self.sizeX))
+        else:
+            im = bcgImage
+
+        # define position
+        if position is None:
+            if axis == 0: position = self.sizeY//2
+            else: position = self.sizeX//2
+
+        if axis == 0:
+            im[position-halfwidth:position,:]= val0+compensation
+            im[position+1:position+halfwidth+1,:]= val1-compensation
+            im[position,:]=weightFactor*val0+(1-weightFactor)*val1
+            im[position-halfwidth-1,:]=weightFactor*val0+(1-weightFactor)*im[position-halfwidth-2,:]
+            im[position+halfwidth+1,:]=weightFactor*im[position+halfwidth+2,:]+(1-weightFactor)*val1
+        else:
+            im[:,position-halfwidth:position]= val0+compensation
+            im[:,position+1:position+halfwidth+1]= val1-compensation
+            im[:,position]=weightFactor*val0+(1-weightFactor)*val1
+            im[:,position-halfwidth-1]=weightFactor*val0+(1-weightFactor)*im[:,position-halfwidth-2]
+            im[:,position+halfwidth+1]=weightFactor*im[:,position+halfwidth+2]+(1-weightFactor)*val1
+            
         
         self.image = self.clipValue(im)
 
