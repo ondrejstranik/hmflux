@@ -20,6 +20,7 @@ class HMFlux():
         '''  set the all the parameter and then run the GUI'''
 
         from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
+        from hmflux.instrument.camera.teledyneCamera.teledyneCamera import TeledyneCamera
         from hmflux.instrument.camera.avCamera.avCamera import AVCamera        
         from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
         from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
@@ -34,6 +35,13 @@ class HMFlux():
         camera.setParameter('exposureTime', 300)
         camera.setParameter('nFrame', 1)
         camera.setParameter('threadingNow',True)
+
+        # #camera
+        # camera = TeledyneCamera(name='TeledyneCamera')
+        # camera.connect()
+        # camera.setParameter('exposureTime', 300)
+        # camera.setParameter('nFrame', 1)
+        # camera.setParameter('threadingNow',True)
 
         #camera 2
         camera2 = AVCamera(name='AVCamera')
@@ -112,6 +120,6 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    HMFlux.runVirtual()
+    HMFlux.runReal()
 
 #%%
