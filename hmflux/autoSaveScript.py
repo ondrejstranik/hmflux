@@ -18,6 +18,7 @@ import time
 
 class AutoSave():
     def __init__(self):
+        self.mkdir()
         #camera
         self.camera = AndorCamera(name='AndorCamera')
         self.camera.connect()
@@ -75,19 +76,25 @@ class AutoSave():
 
         print('Press q if stage is stuck')
 
-        self.mkdir()
+        
 
     def mkdir(self):
         folder = os.path.exists(self.path)
         if not folder:
+                os.makedirs(self.path)
+                os.makedirs(self.path+'./'+'Binary')
+                os.makedirs(self.path+'./'+'Box')
+                # os.makedirs(self.path+'./'+'SLMBi')
+                # os.makedirs(self.path+'./'+'SLMBox')           
+        else:
+            while folder:
+                tail = '-1'
+                self.path = self.path + tail
+                folder = os.path.exists(self.path)
             os.makedirs(self.path)
             os.makedirs(self.path+'./'+'Binary')
             os.makedirs(self.path+'./'+'Box')
-            # os.makedirs(self.path+'./'+'SLMBi')
-            # os.makedirs(self.path+'./'+'SLMBox')
-                        
-        else:
-            print('please create a new folder')
+            
 
 #save when get image
     # def save(self):
