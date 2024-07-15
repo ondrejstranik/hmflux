@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 
 from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
+from hmflux.instrument.camera.teledyneCamera.teledyneCamera import TeledyneCamera
 from hmflux.instrument.camera.avCamera.avCamera import AVCamera        
 from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
 from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
@@ -18,11 +19,11 @@ import time
 
 class AutoSave():
     def __init__(self):
-        self.mkdir()
+        
         #camera
-        self.camera = AndorCamera(name='AndorCamera')
+        self.camera = TeledyneCamera(name='TeledyneCamera')
         self.camera.connect()
-        self.camera.setParameter('exposureTime', 500)
+        self.camera.setParameter('exposureTime', 300)
         self.camera.setParameter('nFrame', 1)
         #self.camera.setParameter('threadingNow',True)
 
@@ -33,8 +34,9 @@ class AutoSave():
         # stage
         self.stage = SmarACTStage('stage')
         self.stage.connect()
+
         #all parameters
-        self.folderName = '20240710-test1-2'
+        self.folderName = '20240715-test1-1'
         self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
@@ -43,10 +45,10 @@ class AutoSave():
         # self.pathSLMBi = Path(self.path+'./'+'SLMBi')
         # self.pathSLMBox = Path(self.path+'./'+'SLMBox')
         self.fileName = 'Image'
-
+        self.mkdir()
 
         #stage parameter
-        self.stageX = 0.02
+        self.stageX = -0.05
         self.stageY = 0
         self.stageZ = 0
         # self.stageMove = np.array((self.stageX,self.stageY,self.stageZ))
@@ -66,13 +68,13 @@ class AutoSave():
         self.binaryValue0 = 0
         self.binaryValue1 = 134
         self.boxAxis = 0
-        self.boxPosition = 335
+        self.boxPosition = 347
         self.boxValue0 = 0
         self.boxValue1 = 102
         self.boxHalfwidth = 3
         self.bcgImage = None
 
-        self.numberOfImage = 200
+        self.numberOfImage = 100
 
         print('Press q if stage is stuck')
 

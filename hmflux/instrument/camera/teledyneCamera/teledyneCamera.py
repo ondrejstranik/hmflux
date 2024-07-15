@@ -20,7 +20,7 @@ class TeledyneCamera(BaseCamera):
                 # 'shutter': 'open',
                 'acquisitionMode': 'sequence',
                 'fanMode': 'high',
-                # 'triggerMode': 'int',       
+                'triggerMode': 'timed',       
 }
      
     def __init__(self, name=None,**kwargs):
@@ -97,3 +97,6 @@ class TeledyneCamera(BaseCamera):
 
 if __name__ == '__main__':
     pass
+
+#%%
+

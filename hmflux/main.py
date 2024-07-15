@@ -29,19 +29,19 @@ class HMFlux():
         # some global settings
         viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
 
-        #camera
-        camera = AndorCamera(name='AndorCamera')
-        camera.connect()
-        camera.setParameter('exposureTime', 300)
-        camera.setParameter('nFrame', 1)
-        camera.setParameter('threadingNow',True)
-
         # #camera
-        # camera = TeledyneCamera(name='TeledyneCamera')
+        # camera = AndorCamera(name='AndorCamera')
         # camera.connect()
         # camera.setParameter('exposureTime', 300)
         # camera.setParameter('nFrame', 1)
         # camera.setParameter('threadingNow',True)
+
+        #camera
+        camera = TeledyneCamera(name='TeledyneCamera')
+        camera.connect()
+        camera.setParameter('exposureTime', 300)
+        camera.setParameter('nFrame', 1)
+        camera.setParameter('threadingNow',True)
 
         #camera 2
         camera2 = AVCamera(name='AVCamera')
