@@ -4,8 +4,7 @@ import os
 from pathlib import Path
 
 from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
-from hmflux.instrument.camera.teledyneCamera.teledyneCamera import TeledyneCamera
-from hmflux.instrument.camera.avCamera.avCamera import AVCamera        
+from hmflux.instrument.camera.teledyneCamera.teledyneCamera import TeledyneCamera   
 from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
 from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
 from hmflux.algorithm.imageSLM import ImageSLM
