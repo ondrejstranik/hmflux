@@ -4,13 +4,12 @@ import os
 import numpy as np
 from pathlib import Path
 
-path = r'.\hmflux\DATA\20240708-test'
-# path = r'D:\ZihaoData\DATA\20240705-test1-1'
+# path = r'.\hmflux\DATA\20240717-103-1'
+path = r'D:\ZihaoData\DATA\PrimeBSI\20240717-104'
 pathConsant = (path+'./'+'Binary')
 pathBox = (path+'./'+'Box')
 # pathSLMBi = (path+'./'+'SLMBi')
 # pathSLMBox = (path+'./'+'SLMBox')
-
 
 
 constantImage = []
@@ -54,3 +53,5 @@ viewer.add_image(np.array(boxImage), name='box')
 # viewer.add_image(np.array(SLMBoxImage), name='SLMBox')
 
 napari.run()
+
+#%%

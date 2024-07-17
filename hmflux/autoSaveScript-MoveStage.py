@@ -14,8 +14,6 @@ import keyboard
 import time
 
 
-'''don t forget check the save folder!!!!! data will be overlap!!!'''
-
 class AutoSave():
     def __init__(self):
         
@@ -35,7 +33,7 @@ class AutoSave():
         self.stage.connect()
 
         #all parameters
-        self.folderName = '20240715-test1-1'
+        self.folderName = '20240717-103-1'
         self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
@@ -47,7 +45,7 @@ class AutoSave():
         self.mkdir()
 
         #stage parameter
-        self.stageX = -0.05
+        self.stageX = 0.05
         self.stageY = 0
         self.stageZ = 0
         # self.stageMove = np.array((self.stageX,self.stageY,self.stageZ))
@@ -67,13 +65,13 @@ class AutoSave():
         self.binaryValue0 = 0
         self.binaryValue1 = 134
         self.boxAxis = 0
-        self.boxPosition = 347
+        self.boxPosition = 320
         self.boxValue0 = 0
-        self.boxValue1 = 102
+        self.boxValue1 = 103
         self.boxHalfwidth = 3
         self.bcgImage = None
 
-        self.numberOfImage = 100
+        self.numberOfImage = 110
 
         print('Press q if stage is stuck')
 
@@ -95,6 +93,8 @@ class AutoSave():
             os.makedirs(self.path)
             os.makedirs(self.path+'./'+'Binary')
             os.makedirs(self.path+'./'+'Box')
+            self.pathBinary = Path(self.path+'./'+'Binary')
+            self.pathBox = Path(self.path+'./'+'Box')
             
 
 #save when get image

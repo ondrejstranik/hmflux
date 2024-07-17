@@ -37,7 +37,7 @@ class SaveImageGUI(BaseGUI):
                 fileIdx = {"label": "File Index:"})
         def saveGui(filePath= Path(self.viscope.dataFolder), fileName: str = 'Image', fileIdx=0,idxIncrement=True):
 
-            np.save(str(filePath / fileName) + f'_{fileIdx}',self.device.rawImage)            
+            np.save(str(filePath / fileName) + f'_{fileIdx:03d}',self.device.rawImage)            
 
             if idxIncrement:
                 saveGui.fileIdx.value = saveGui.fileIdx.value + 1 
