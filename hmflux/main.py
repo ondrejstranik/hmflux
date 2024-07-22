@@ -39,7 +39,7 @@ class HMFlux():
         #camera
         camera = TeledyneCamera(name='TeledyneCamera')
         camera.connect()
-        camera.setParameter('exposureTime', 300)
+        camera.setParameter('exposureTime', 1000)
         camera.setParameter('nFrame', 1)
         camera.setParameter('threadingNow',True)
 
