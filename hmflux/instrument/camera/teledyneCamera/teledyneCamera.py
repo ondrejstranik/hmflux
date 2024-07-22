@@ -60,14 +60,21 @@ class TeledyneCamera(BaseCamera):
         myframe = None
         for _ in range(self.nFrame):
             # wait till camera is recording
-            while not self.cam.acquisition_in_progress():
-                self.cam.start_acquisition()
-                print(f'camera is still running {self.cam.acquisition_in_progress()}')
-                time.sleep(0.003)
-            camResult = self.cam.wait_for_frame(since= "lastread",timeout=None)
-            print(f'camResult is {camResult}')
+            #while not self.cam.acquisition_in_progress():
+            # self.cam.start_acquisition()
+            #    print(f'camera is still running {self.cam.acquisition_in_progress()}')
+            #    time.sleep(0.003)
+            #camResult = False
+            #while not camResult:
+            #    camResult = self.cam.wait_for_frame(since= "lastread",timeout=None)
+            #    print(f'camResult is {camResult}')
             #_myframe = self.cam.read_oldest_image()
-            _myframe = self.cam.read_newest_image()
+            _myframe = None
+            while _myframe is None:
+                _myframe = self.cam.read_newest_image()
+                time.sleep(0.003)
+            print(f'new image arrived')
+
             if myframe is None:
                 myframe = _myframe
             else:
@@ -78,23 +85,34 @@ class TeledyneCamera(BaseCamera):
     def _setExposureTime(self,value): # ms
         # set the expression time
 
-        if self.worker is not None:
-            self.worker.pause()
+        #if self.worker is not None:
+        #    self.worker.pause()
         
+        is_acquition = self.cam.acquisition_in_progress()
 
-        self.cam.stop_acquisition()
+        with self.lock:
+            if is_acquition: 
+                print('pausing the acquisition')
+                self.cam.stop_acquisition()
 
-        print(f'set Exposure Time {value}')
-        self.cam.set_exposure(value/1000)     
-        self.exposureTime = value
+            print(f'set Exposure Time {value}')
+            self.cam.set_exposure(value/1000)     
+            self.exposureTime = value
 
-        while not self.cam.acquisition_in_progress():
-            self.cam.start_acquisition()
-            print(f'camera_progress is {self.cam.acquisition_in_progress()}')
-            time.sleep(0.003)
+            if is_acquition:
+                print('re-starting camera acquisition')
+                self.cam.start_acquisition()
+                self.cam.start_acquisition()
 
-        if self.worker is not None:
-            self.worker.resume()
+        #print(f'camera_progress is {self.cam.acquisition_in_progress()}')
+
+        #while not self.cam.acquisition_in_progress():
+        #    self.cam.start_acquisition()
+        #    print(f'camera_progress is {self.cam.acquisition_in_progress()}')
+        #    time.sleep(0.003)
+
+        #if self.worker is not None:
+        #    self.worker.resume()
 
 
     def _getExposureTime(self):
