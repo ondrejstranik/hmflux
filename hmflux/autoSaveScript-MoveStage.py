@@ -20,9 +20,11 @@ class AutoSave():
         #camera
         self.camera = TeledyneCamera(name='TeledyneCamera')
         self.camera.connect()
+        self.camera.stopAcquisition()
         self.camera.setParameter('exposureTime', 300)
         self.camera.setParameter('nFrame', 1)
         #self.camera.setParameter('threadingNow',True)
+
 
         # slm
         self.slm = ScreenSLM('slm')
@@ -33,7 +35,7 @@ class AutoSave():
         self.stage.connect()
 
         #all parameters
-        self.folderName = '20240717-103-1'
+        self.folderName = '20240723-autoTest'
         self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
@@ -45,7 +47,7 @@ class AutoSave():
         self.mkdir()
 
         #stage parameter
-        self.stageX = 0.05
+        self.stageX = -0.05
         self.stageY = 0
         self.stageZ = 0
         # self.stageMove = np.array((self.stageX,self.stageY,self.stageZ))
@@ -65,9 +67,9 @@ class AutoSave():
         self.binaryValue0 = 0
         self.binaryValue1 = 134
         self.boxAxis = 0
-        self.boxPosition = 320
+        self.boxPosition = 362
         self.boxValue0 = 0
-        self.boxValue1 = 103
+        self.boxValue1 = 108
         self.boxHalfwidth = 3
         self.bcgImage = None
 
@@ -123,23 +125,22 @@ class AutoSave():
             #binary
             # slmImage = np.zeros([self.sizeX,self.sizeY])
             print(f'recording {ii} image')
-            self.camera.stopAcquisitionTest()
             self.slm.setImage(slmImageBi)
             # time.sleep(0.3)
             # TODO: try this
-            self.camera.startAcquisitionTest()
+            self.camera.startAcquisition()
             self.rawBinary = self.camera.getLastImage()
+            self.camera.stopAcquisition()
             # self.binaryImage.append(self.rawBinary)
             np.save(str(self.pathBinary / self.fileName) + f'_{ii:03d}',self.rawBinary)
-            
+
             #box1
             self.slm.setImage(slmImageBox)
-            self.camera.stopAcquisitionTest()
             # time.sleep(0.3)
             # TODO: try this
-
-            self.camera.startAcquisitionTest()
+            self.camera.startAcquisition()
             self.rawBox = self.camera.getLastImage()
+            self.camera.stopAcquisition()
             # self.boxImage.append(self.rawBox)
             np.save(str(self.pathBox/ self.fileName) + f'_{ii:03d}',self.rawBox)
 

@@ -4,18 +4,26 @@ import os
 import numpy as np
 from pathlib import Path
 
-# path = r'.\hmflux\DATA\20240718-100'
-path = r'D:\ZihaoData\DATA\PrimeBSI\20240718-100'
+path = r'.\hmflux\DATA\20240723-autoTest'
+# path1 = r'.\hmflux\DATA'
+# path = r'D:\ZihaoData\DATA\PrimeBSI\20240718-100'
 pathConsant = (path+'./'+'Binary')
-# pathBox = (path+'./'+'Box')
+pathBox = (path+'./'+'Box')
 # pathSLMBi = (path+'./'+'SLMBi')
 # pathSLMBox = (path+'./'+'SLMBox')
 
 
 constantImage = []
 boxImage = []
+# testImage = []
 # slmBi = []
 # slmBox = []
+
+# testFile = ['Image_000.npy','Image_001.npy']
+# tempImage = np.load(path1+'./'+testFile[0])
+# testImage.append(tempImage)
+# tempImage = np.load(path1+'./'+testFile[1])
+# testImage.append(tempImage)
 
 # filenames = os.listdir(pathBox)
 filenames = os.listdir(pathConsant)
@@ -31,8 +39,9 @@ filenames = os.listdir(pathConsant)
 for filename in filenames:
     cImage = np.load(pathConsant+'./'+filename)
     constantImage.append(cImage)
-    # bImage = np.load(pathBox+'./'+filename)
-    # boxImage.append(bImage)
+    bImage = np.load(pathBox+'./'+filename)
+    boxImage.append(bImage)
+
 
 
 # for ii in range(nFile):
@@ -49,7 +58,8 @@ for filename in filenames:
 
 viewer = napari.Viewer()
 viewer.add_image(np.array(constantImage), name='binary')
-# viewer.add_image(np.array(boxImage), name='box')
+viewer.add_image(np.array(boxImage), name='box')
+# viewer.add_image(np.array(testImage), name='test')
 # viewer.add_image(np.array(SLMBiImage), name='SLMBi')
 # viewer.add_image(np.array(SLMBoxImage), name='SLMBox')
 

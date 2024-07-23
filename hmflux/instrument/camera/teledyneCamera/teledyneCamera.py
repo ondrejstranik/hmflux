@@ -42,15 +42,13 @@ class TeledyneCamera(BaseCamera):
         # self.cam.setup_shutter(TeledyneCamera.DEFAULT['shutter'])
         self.cam.setup_acquisition(TeledyneCamera.DEFAULT['acquisitionMode'],  nframes=2)
         self.cam.set_fan_mode(TeledyneCamera.DEFAULT['fanMode'])
-        #self.cam.set_trigger_mode(TeledyneCamera.DEFAULT['triggerMode'])
+        # self.cam.set_trigger_mode(TeledyneCamera.DEFAULT['triggerMode'])
         # self.cam.set_exposure(0.0005)
         # self.cam.set_EMCCD_gain(TeledyneCamera.DEFAULT['gain'],advanced=False)
         self._setExposureTime(self.exposureTime)
-
-        self.cam.start_acquisition()
-
         # get the camera optimal exposure time 
         self.exposureTime = self.getParameter('exposureTime')
+        self.startAcquisition()
 
     def disconnect(self):
         self.cam.stop_acquisition()
@@ -73,7 +71,7 @@ class TeledyneCamera(BaseCamera):
             while _myframe is None:
                 _myframe = self.cam.read_newest_image()
                 time.sleep(0.003)
-            print(f'new image arrived')
+            # print(f'new image arrived')
 
             if myframe is None:
                 myframe = _myframe
@@ -93,7 +91,7 @@ class TeledyneCamera(BaseCamera):
         with self.lock:
             if is_acquition: 
                 print('pausing the acquisition')
-                self.cam.stop_acquisition()
+                self.stopAcquisition()
 
             print(f'set Exposure Time {value}')
             self.cam.set_exposure(value/1000)     
@@ -101,8 +99,7 @@ class TeledyneCamera(BaseCamera):
 
             if is_acquition:
                 print('re-starting camera acquisition')
-                self.cam.start_acquisition()
-                self.cam.start_acquisition()
+                self.startAcquisition()
 
         #print(f'camera_progress is {self.cam.acquisition_in_progress()}')
 
@@ -118,12 +115,15 @@ class TeledyneCamera(BaseCamera):
     def _getExposureTime(self):
         self.exposureTime = self.cam.get_exposure()*1000
         return self.exposureTime
-    
-    #for solving the autoSave problem
-    def startAcquisitionTest(self):
+
+
+    def startAcquisition(self):
+        # wrapper for start_acquistion
+        self.cam.start_acquisition()
         self.cam.start_acquisition()
 
-    def stopAcquisitionTest(self):
+    def stopAcquisition(self):
+        # wrapper for start_acquition
         self.cam.stop_acquisition()
 
 
