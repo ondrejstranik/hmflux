@@ -4,38 +4,18 @@ import os
 import numpy as np
 from pathlib import Path
 
-path = r'.\hmflux\DATA\20240723-autoTest-1'
-# path = r'D:\ZihaoData\DATA\PrimeBSI\20240718-100'
+# path = r'.\hmflux\DATA\20240723-autoTest-1'
+path = r'D:\ZihaoData\DATA\PrimeBSI\20240724-100'
 pathConsant = (path+'./'+'Binary')
 pathBox = (path+'./'+'Box')
-# pathSLMBi = (path+'./'+'SLMBi')
-# pathSLMBox = (path+'./'+'SLMBox')
-
+pathDark = (path+'./'+'Dark')
 
 constantImage = []
 boxImage = []
-# testImage = []
-# slmBi = []
-# slmBox = []
-
-# testFile = ['Image_000.npy','Image_001.npy','Image_002.npy','Image_003.npy']
-# tempImage = np.load(path+'./'+testFile[0])
-# testImage.append(tempImage)
-# tempImage = np.load(path+'./'+testFile[1])
-# testImage.append(tempImage)
-# tempImage = np.load(path+'./'+testFile[2])
-# testImage.append(tempImage)
-# tempImage = np.load(path+'./'+testFile[3])
-# testImage.append(tempImage)
+darkImage = []
 
 # filenames = os.listdir(pathBox)
 filenames = os.listdir(pathConsant)
-
-# nFile = len(os.listdir(pathBox))
-# filenameConst = 'Image_{}.npy'
-# filenameBox = filenameConst
-# filenameSLMBi = filenameConst
-# filenameSLMBox = filenameConst
 
 #%%
 
@@ -44,27 +24,13 @@ for filename in filenames:
     constantImage.append(cImage)
     bImage = np.load(pathBox+'./'+filename)
     boxImage.append(bImage)
-
-
-
-# for ii in range(nFile):
-#     cImage = np.load(pathConsant+'./'+filenameConst.format(ii))
-#     constantImage.append(cImage)
-#     bImage = np.load(pathBox+'/'+filenameBox.format(ii))
-#     boxImage.append(bImage)
-
-    # SLMBiImage = np.load(pathSLMBi+'./'+filenameSLMBi.format(ii))
-    # slmBi.append(SLMBiImage)
-    # SLMBoxImage = np.load(pathSLMBox+'/'+filenameSLMBox.format(ii))
-    # slmBox.append(SLMBoxImage)
-
+    dImage = np.load(pathDark+'./'+filename)
+    darkImage.append(dImage)
 
 viewer = napari.Viewer()
 viewer.add_image(np.array(constantImage), name='binary')
 viewer.add_image(np.array(boxImage), name='box')
-# viewer.add_image(np.array(testImage), name='test')
-# viewer.add_image(np.array(SLMBiImage), name='SLMBi')
-# viewer.add_image(np.array(SLMBoxImage), name='SLMBox')
+viewer.add_image(np.array(darkImage), name='dark')
 
 napari.run()
 

@@ -35,19 +35,21 @@ class AutoSave():
         self.stage.connect()
 
         #all parameters
-        self.folderName = '20240723-autoTest-1'
-        self.dataFolder = r'.\hmflux\DATA'
+        self.folderName = '20240724-100'
+        self.dataFolder = r'D:\ZihaoData\DATA\PrimeBSI'
+        # self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
         self.pathBinary = Path(self.path+'./'+'Binary')
         self.pathBox = Path(self.path+'./'+'Box')
+        self.pathDark = Path(self.path+'./'+'Dark')
         # self.pathSLMBi = Path(self.path+'./'+'SLMBi')
         # self.pathSLMBox = Path(self.path+'./'+'SLMBox')
         self.fileName = 'Image'
         self.mkdir()
 
         #stage parameter
-        self.stageX = -0.05
+        self.stageX = -0.01
         self.stageY = 0
         self.stageZ = 0
         # self.stageMove = np.array((self.stageX,self.stageY,self.stageZ))
@@ -67,13 +69,13 @@ class AutoSave():
         self.binaryValue0 = 0
         self.binaryValue1 = 134
         self.boxAxis = 0
-        self.boxPosition = 362
+        self.boxPosition = 321
         self.boxValue0 = 0
-        self.boxValue1 = 106
+        self.boxValue1 = 100
         self.boxHalfwidth = 3
         self.bcgImage = None
 
-        self.numberOfImage = 70
+        self.numberOfImage = 500
 
         print('Press q if stage is stuck')
 
@@ -85,6 +87,7 @@ class AutoSave():
                 os.makedirs(self.path)
                 os.makedirs(self.path+'./'+'Binary')
                 os.makedirs(self.path+'./'+'Box')
+                os.makedirs(self.path+'./'+'Dark')
                 # os.makedirs(self.path+'./'+'SLMBi')
                 # os.makedirs(self.path+'./'+'SLMBox')           
         else:
@@ -95,18 +98,17 @@ class AutoSave():
             os.makedirs(self.path)
             os.makedirs(self.path+'./'+'Binary')
             os.makedirs(self.path+'./'+'Box')
+            os.makedirs(self.path+'./'+'Dark')
             self.pathBinary = Path(self.path+'./'+'Binary')
             self.pathBox = Path(self.path+'./'+'Box')
+            self.pathDark = Path(self.path+'./'+'Dark')
             
-
-#save when get image
-    # def save(self):
-    #     for ii in range(len(self.binaryImage)):
-    #         pathBinary = Path(self.path+'./'+'Binary')
-    #         pathBox = Path(self.path+'./'+'Box')
-    #         fileName = 'Image'
-    #         np.save(str(pathBinary / fileName) + f'_{ii}',self.binaryImage[ii])
-    #         np.save(str(pathBox/ fileName) + f'_{ii}',self.boxImage[ii])
+    def getStagePosition(self):
+        ax1 = self.stage.getPosition('X')
+        ax2 = self.stage.getPosition('Y')
+        ax3 = self.stage.getPosition('Z')
+        self.position = np.array((ax1,ax2,ax3))
+        return self.position
 
 
     def record(self):
@@ -121,7 +123,13 @@ class AutoSave():
                                             val1=self.boxValue1,
                                             halfwidth=self.boxHalfwidth,
                                             bcgImage=slmImageBox)
+        
+        slmImageDark = self.imageSLM.generateConstant(self.constantValue)
+        slmImageDark += self.imageSLM.generateBinaryGrating(1-self.binaryAxis,self.binaryValue0,self.binaryValue1)
+
+        stagePosition = np.zeros([self.numberOfImage,3])
         for ii in range(self.numberOfImage):
+            stagePosition[ii,:] = self.getStagePosition()
             #binary
             # slmImage = np.zeros([self.sizeX,self.sizeY])
             print(f'recording {ii} image')
@@ -144,6 +152,14 @@ class AutoSave():
             # self.boxImage.append(self.rawBox)
             np.save(str(self.pathBox/ self.fileName) + f'_{ii:03d}',self.rawBox)
 
+            #dark
+            self.slm.setImage(slmImageDark)
+            self.camera.startAcquisition()
+            self.rawDark = self.camera.getLastImage()
+            self.camera.stopAcquisition()
+            # self.boxImage.append(self.rawBox)
+            np.save(str(self.pathDark/ self.fileName) + f'_{ii:03d}',self.rawDark)
+
             if self.stageX != 0:
                 self.stage.move(self.stageX,'X')
             elif self.stageY != 0:
@@ -155,6 +171,7 @@ class AutoSave():
             if keyboard.is_pressed('q'):
                 print("Loop terminated")
                 break
+        np.savetxt(self.path+'./'+'stageShiftInfo.txt', stagePosition)
 
 #%%
 
