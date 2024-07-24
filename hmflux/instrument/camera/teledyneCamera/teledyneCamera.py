@@ -126,6 +126,10 @@ class TeledyneCamera(BaseCamera):
         # wrapper for start_acquition
         self.cam.stop_acquisition()
 
+    def getExposure(self):
+        return self.cam.get_exposure()
+
+
 
 
 #%%

@@ -4,8 +4,7 @@ import os
 import numpy as np
 from pathlib import Path
 
-path = r'.\hmflux\DATA\20240723-autoTest'
-# path1 = r'.\hmflux\DATA'
+path = r'.\hmflux\DATA\20240723-autoTest-1'
 # path = r'D:\ZihaoData\DATA\PrimeBSI\20240718-100'
 pathConsant = (path+'./'+'Binary')
 pathBox = (path+'./'+'Box')
@@ -19,10 +18,14 @@ boxImage = []
 # slmBi = []
 # slmBox = []
 
-# testFile = ['Image_000.npy','Image_001.npy']
-# tempImage = np.load(path1+'./'+testFile[0])
+# testFile = ['Image_000.npy','Image_001.npy','Image_002.npy','Image_003.npy']
+# tempImage = np.load(path+'./'+testFile[0])
 # testImage.append(tempImage)
-# tempImage = np.load(path1+'./'+testFile[1])
+# tempImage = np.load(path+'./'+testFile[1])
+# testImage.append(tempImage)
+# tempImage = np.load(path+'./'+testFile[2])
+# testImage.append(tempImage)
+# tempImage = np.load(path+'./'+testFile[3])
 # testImage.append(tempImage)
 
 # filenames = os.listdir(pathBox)

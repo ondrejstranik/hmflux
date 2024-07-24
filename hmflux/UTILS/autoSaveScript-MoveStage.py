@@ -35,7 +35,7 @@ class AutoSave():
         self.stage.connect()
 
         #all parameters
-        self.folderName = '20240723-autoTest'
+        self.folderName = '20240723-autoTest-1'
         self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
@@ -69,11 +69,11 @@ class AutoSave():
         self.boxAxis = 0
         self.boxPosition = 362
         self.boxValue0 = 0
-        self.boxValue1 = 108
+        self.boxValue1 = 106
         self.boxHalfwidth = 3
         self.bcgImage = None
 
-        self.numberOfImage = 110
+        self.numberOfImage = 70
 
         print('Press q if stage is stuck')
 
@@ -115,7 +115,7 @@ class AutoSave():
 
         slmImageBox = self.imageSLM.generateConstant(self.constantValue)
         slmImageBox += self.imageSLM.generateBinaryGrating(1-self.boxAxis,self.binaryValue0,self.binaryValue1)
-        slmImageBox += self.imageSLM.generateBox1(axis=self.boxAxis,
+        slmImageBox = self.imageSLM.generateBox1(axis=self.boxAxis,
                                             position=self.boxPosition,
                                             val0=self.boxValue0,
                                             val1=self.boxValue1,
@@ -151,7 +151,7 @@ class AutoSave():
             elif self.stageZ != 0:
                 self.stage.move(self.stageZ,'Z')
 
-
+            
             if keyboard.is_pressed('q'):
                 print("Loop terminated")
                 break
