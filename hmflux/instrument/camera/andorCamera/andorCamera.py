@@ -92,6 +92,14 @@ class AndorCamera(BaseCamera):
     def _getExposureTime(self):
         self.exposureTime = self.cam.get_exposure()*1000
         return self.exposureTime
+    
+    #for solving the autoSave problem
+    def startAcquisitionTest(self):
+        self.cam.start_acquisition()
+
+    def stopAcquisitionTest(self):
+        self.cam.stop_acquisition()
+
 
 
 #%%
