@@ -6,85 +6,65 @@ Created on Mon Nov 15 12:08:51 2021
 @author: ostranik
 """
 #%%
-
-import os
-import time
+import hmflux
+from hmflux.instrument.recordSequencer import RecordSequencer
 import numpy as np
-from viscope.instrument.base.baseSequencer import BaseSequencer
-from plim.algorithm.plasmonFit import PlasmonFit
-from plim.algorithm.spotSpectra import SpotSpectra
-from plim.algorithm.spotData import SpotData
-from plim.algorithm.flowData import FlowData
+import keyboard
+from pathlib import Path
 
 
-class StageSequencer(BaseSequencer):
-    ''' class to control recording of images with moving stage
+class StageSequencer(RecordSequencer):
+    ''' class to control recording images for given slm and shifting the stage.
+        synchronous acquisition
     '''
-    DEFAULT = {'name': 'StageSequencer'}
+    DEFAULT = {'name': 'StageSequencer',
+               'numberOfImage': 10,
+               'shiftVector': np.array([1,0,0])}
 
     def __init__(self, name=None, **kwargs):
         ''' initialisation '''
 
         if name== None: name= StageSequencer.DEFAULT['name']
         super().__init__(name=name, **kwargs)
-        
-        # camera
-        self.camera = None
-        # stage
-        self.stage = None
-        # slm
-        self.slm = None
 
-    def connect(self,camera=None,stage=None,slm=None):
-        ''' connect sequencer with the camera, stage, slm '''
-        super().connect()
-        if camera is not None: self.setParameter('camera',camera)
-        if stage is not None: self.setParameter('stage',stage)
-        if slm is not None: self.setParameter('slm',slm)
-
-    def setParameter(self,name, value):
-        ''' set parameter of the spectral camera'''
-        super().setParameter(name,value)
-
-        if name== 'camera':
-            self.camera = value
-        if name== 'stage':
-            self.stage = value
-        if name== 'slm':
-            self.slm = value
-
-    def getParameter(self,name):
-        ''' get parameter of the camera '''
-        _value = super().getParameter(name)
-        if _value is not None: return _value        
-
-        if name== 'camera':
-            return self.camera
-        if name== 'stage':
-            return self.stage
-        if name== 'slm':
-            return self.slm
-
-    def processData(self):
-        ''' process newly arrived data '''
-        #print(f"processing data from {self.DEFAULT['name']}")
-        self.spotSpectra.setImage(self.sCamera.sImage)
-        self.pF.setSpectra(self.spotSpectra.getA())
-        self.pF.setWavelength(self.sCamera.wavelength)
-        self.pF.calculateFit()
-        newTime = time.time()
-        newFlow = self.pump.getParameter('flowRateReal')
-        newSignal = self.pF.getPosition()
-        if newSignal != []:
-            t0 = self.spotData.addDataValue(newSignal,newTime)
-            if t0 is not None: 
-                self.flowData.clearData()
-                self.flowData.setT0(t0)
-        if newFlow is not None:
-            self.flowData.addDataValue([newFlow],newTime)
+        # recording parameters
+        self.numberOfImage = StageSequencer.DEFAULT['numberOfImage']
+        self.shiftVector = StageSequencer.DEFAULT['shiftVector']
+        self.dataFolder = str(Path(hmflux.dataFolder).joinpath('dataset'))
 
 
-        
+    def loop(self):
+
+        # for synchronisation reasons it stop the camera acquisition
+        self.camera.stopAcquisition()
+
+        # check if the folder exist, if not create it
+        p = Path(self.dataFolder)
+        p.mkdir(parents=True, exist_ok=True)
+
+        initialPosition = self.stage.getParameter('position')
+
+
+        ''' finite loop of the sequence'''
+        for ii in range(self.numberOfImage):
+            print(f'recording {ii} image')
+            # get image
+            self.camera.startAcquisition()
+            self.image = self.camera.getLastImage()
+            self.camera.stopAcquisition()
+            # save image
+            np.save(self.dataFolder + '/' + 'image' + f'_{ii:03d}',self.image)
+            yield
+            # move stage
+            self.stage.setParameter('position',initialPosition + (ii+1)*self.shiftVector)
+
+            # keybord abort of the action
+            if keyboard.is_pressed('ctrl+q'):
+                print("Loop aborted")
+
+
+            
+       
 
 
 #%%

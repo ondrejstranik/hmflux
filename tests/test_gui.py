@@ -78,3 +78,43 @@ def test_SLMViewer():
 
     sv = SLMViewer()
     sv.run()
+
+
+def test_seqStageGUI():
+    ''' test if seqStageGUI works'''
+    from hmflux.instrument.stageSequencer import StageSequencer
+    from viscope.instrument.virtual.virtualCamera import VirtualCamera
+    from viscope.instrument.virtual.virtualSLM import VirtualSLM
+    from viscope.instrument.virtual.virtualStage import VirtualStage
+
+    from viscope.main import viscope
+    from hmflux.gui.seqStageGUI import SeqStageGUI
+
+    #camera
+    camera = VirtualCamera(name='VirtualCamera')
+    camera.connect()
+    camera.setParameter('exposureTime', 300)
+    camera.setParameter('nFrame', 1)
+    # slm
+    slm = VirtualSLM()
+    slm.connect()
+    # stage
+    stage = VirtualStage('stage')
+    stage.connect()
+    # stage Sequencer
+    seq = StageSequencer()
+    seq.connect(camera=camera, stage=stage,slm=slm)
+    seq.setParameter('threading',True)
+
+    # add gui
+    newGUI  = SeqStageGUI(viscope)
+    newGUI.setDevice(seq)
+    
+
+    # main event loop
+    viscope.run()
+
+    seq.disconnect()
+    camera.disconnect()
+    slm.disconnect()
+    stage.disconnect()
