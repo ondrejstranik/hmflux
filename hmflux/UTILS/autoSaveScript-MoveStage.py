@@ -35,30 +35,21 @@ class AutoSave():
         self.stage.connect()
 
         #all parameters
-        self.folderName = '20240724-100'
-        self.dataFolder = r'D:\ZihaoData\DATA\PrimeBSI'
+        self.folderName = '20240725-104'
+        self.dataFolder = r'E:\ZihaoData\DATA\PrimeBSI'
         # self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
 
         self.pathBinary = Path(self.path+'./'+'Binary')
         self.pathBox = Path(self.path+'./'+'Box')
         self.pathDark = Path(self.path+'./'+'Dark')
-        # self.pathSLMBi = Path(self.path+'./'+'SLMBi')
-        # self.pathSLMBox = Path(self.path+'./'+'SLMBox')
         self.fileName = 'Image'
         self.mkdir()
 
         #stage parameter
-        self.stageX = -0.01
+        self.stageX = -0.02
         self.stageY = 0
         self.stageZ = 0
-        # self.stageMove = np.array((self.stageX,self.stageY,self.stageZ))
-        # self.axis = ['X', 'Y', 'Z']
-
-        #camera image
-        # self.binaryImage = []
-        # self.boxImage = []
-
 
         #slm parameter
         self.imageSLM = ImageSLM()
@@ -69,17 +60,15 @@ class AutoSave():
         self.binaryValue0 = 0
         self.binaryValue1 = 134
         self.boxAxis = 0
-        self.boxPosition = 321
+        self.boxPosition = 333
         self.boxValue0 = 0
-        self.boxValue1 = 100
+        self.boxValue1 = 104
         self.boxHalfwidth = 3
         self.bcgImage = None
 
-        self.numberOfImage = 500
+        self.numberOfImage = 250
 
         print('Press q if stage is stuck')
-
-        
 
     def mkdir(self):
         folder = os.path.exists(self.path)
@@ -88,8 +77,7 @@ class AutoSave():
                 os.makedirs(self.path+'./'+'Binary')
                 os.makedirs(self.path+'./'+'Box')
                 os.makedirs(self.path+'./'+'Dark')
-                # os.makedirs(self.path+'./'+'SLMBi')
-                # os.makedirs(self.path+'./'+'SLMBox')           
+     
         else:
             while folder:
                 tail = '-1'
@@ -130,17 +118,15 @@ class AutoSave():
         stagePosition = np.zeros([self.numberOfImage,3])
         for ii in range(self.numberOfImage):
             stagePosition[ii,:] = self.getStagePosition()
-            #binary
-            # slmImage = np.zeros([self.sizeX,self.sizeY])
             print(f'recording {ii} image')
-            self.slm.setImage(slmImageBi)
-            # time.sleep(0.3)
-            # TODO: try this
-            self.camera.startAcquisition()
-            self.rawBinary = self.camera.getLastImage()
-            self.camera.stopAcquisition()
-            # self.binaryImage.append(self.rawBinary)
-            np.save(str(self.pathBinary / self.fileName) + f'_{ii:03d}',self.rawBinary)
+            #binary
+            # self.slm.setImage(slmImageBi)
+            # # time.sleep(0.3)
+            # # TODO: try this
+            # self.camera.startAcquisition()
+            # self.rawBinary = self.camera.getLastImage()
+            # self.camera.stopAcquisition()
+            # np.save(str(self.pathBinary / self.fileName) + f'_{ii:03d}',self.rawBinary)
 
             #box1
             self.slm.setImage(slmImageBox)
@@ -149,16 +135,14 @@ class AutoSave():
             self.camera.startAcquisition()
             self.rawBox = self.camera.getLastImage()
             self.camera.stopAcquisition()
-            # self.boxImage.append(self.rawBox)
             np.save(str(self.pathBox/ self.fileName) + f'_{ii:03d}',self.rawBox)
 
             #dark
-            self.slm.setImage(slmImageDark)
-            self.camera.startAcquisition()
-            self.rawDark = self.camera.getLastImage()
-            self.camera.stopAcquisition()
-            # self.boxImage.append(self.rawBox)
-            np.save(str(self.pathDark/ self.fileName) + f'_{ii:03d}',self.rawDark)
+            # self.slm.setImage(slmImageDark)
+            # self.camera.startAcquisition()
+            # self.rawDark = self.camera.getLastImage()
+            # self.camera.stopAcquisition()
+            # np.save(str(self.pathDark/ self.fileName) + f'_{ii:03d}',self.rawDark)
 
             if self.stageX != 0:
                 self.stage.move(self.stageX,'X')

@@ -4,7 +4,7 @@ main class for holo min flux
 #%%
 
 from viscope.main import viscope
-from viscope.gui.allDeviceGUI import AllDeviceGUI    
+from viscope.gui.allDeviceGUI import AllDeviceGUI
 from hmflux.gui.saveImageGUI import SaveImageGUI
 from hmflux.gui.slmGUI import SLMGUI
 
