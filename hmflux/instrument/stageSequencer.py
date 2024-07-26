@@ -32,6 +32,8 @@ class StageSequencer(RecordSequencer):
         self.shiftVector = StageSequencer.DEFAULT['shiftVector']
         self.dataFolder = str(Path(hmflux.dataFolder).joinpath('dataset'))
 
+        self.image = None
+        self.imageSet = None
 
     def loop(self):
 
@@ -52,6 +54,12 @@ class StageSequencer(RecordSequencer):
             self.camera.startAcquisition()
             self.image = self.camera.getLastImage()
             self.camera.stopAcquisition()
+
+            # add image to the imageSet
+            if ii==0:
+                self.imageSet = np.empty((self.numberOfImage,*self.image.shape))
+            self.imageSet[ii,...] = self.image
+
             # save image
             np.save(self.dataFolder + '/' + 'image' + f'_{ii:03d}',self.image)
             yield
@@ -62,9 +70,6 @@ class StageSequencer(RecordSequencer):
             if keyboard.is_pressed('ctrl+q'):
                 print("Loop aborted")
 
-
-            
-       
 
 
 #%%

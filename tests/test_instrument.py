@@ -134,6 +134,33 @@ def test_stageSequencer():
     slm.disconnect()
     stage.disconnect()
 
+def test_hmfluxProcessor():
+    from viscope.instrument.virtual.virtualCamera import VirtualCamera
+    from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
+    import time
+
+    #camera
+    camera = VirtualCamera(name='VirtualCamera')
+    camera.connect()
+    camera.setParameter('exposureTime', 300)
+    camera.setParameter('nFrame', 1)
+    camera.setParameter('threadingNow', True)
+
+    hmfluxPro = HMFluxProcessor()
+    hmfluxPro.connect(camera=camera)
+    hmfluxPro.setParameter('threadingNow', True)
+
+    print('waiting ')
+    time.sleep(3)
+
+    _sig, _time = hmfluxPro.emitterData.getData()
+
+    print(f'time:\n {_time}')
+    print(f'signal:\n {_sig}')
+    
+    hmfluxPro.disconnect()
+    camera.disconnect()
+
 
 
 
