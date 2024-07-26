@@ -14,7 +14,8 @@ setuptools.setup(
     url="https://github.com/ondrejstranik/hmflux",
     packages = setuptools.find_packages(),
     install_requires = [
-        'pylablib'],
+        'pylablib',
+        'keyboard'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

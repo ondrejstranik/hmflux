@@ -85,7 +85,7 @@ def test_smarACTStage():
     stage.disconnect()
 
 @pytest.mark.GUI
-def test_smarACTStage():
+def test_smarACTStage_2():
     ''' check if smarACT stage in gui works'''
     from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
 
@@ -103,3 +103,64 @@ def test_smarACTStage():
     viscope.run()
 
     stage.disconnect()
+
+def test_stageSequencer():
+    from hmflux.instrument.stageSequencer import StageSequencer
+    from viscope.instrument.virtual.virtualCamera import VirtualCamera
+    from viscope.instrument.virtual.virtualSLM import VirtualSLM
+    from viscope.instrument.virtual.virtualStage import VirtualStage
+
+    #camera
+    camera = VirtualCamera(name='VirtualCamera')
+    camera.connect()
+    camera.setParameter('exposureTime', 300)
+    camera.setParameter('nFrame', 1)
+
+    # slm
+    slm = VirtualSLM()
+    slm.connect()
+
+    # stage
+    stage = VirtualStage('stage')
+    stage.connect()
+
+    seq = StageSequencer()
+    seq.connect(camera=camera, stage=stage,slm=slm)
+
+    for _ in seq.loop():
+        pass
+
+    camera.disconnect()
+    slm.disconnect()
+    stage.disconnect()
+
+def test_hmfluxProcessor():
+    from viscope.instrument.virtual.virtualCamera import VirtualCamera
+    from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
+    import time
+
+    #camera
+    camera = VirtualCamera(name='VirtualCamera')
+    camera.connect()
+    camera.setParameter('exposureTime', 300)
+    camera.setParameter('nFrame', 1)
+    camera.setParameter('threadingNow', True)
+
+    hmfluxPro = HMFluxProcessor()
+    hmfluxPro.connect(camera=camera)
+    hmfluxPro.setParameter('threadingNow', True)
+
+    print('waiting ')
+    time.sleep(3)
+
+    _sig, _time = hmfluxPro.emitterData.getData()
+
+    print(f'time:\n {_time}')
+    print(f'signal:\n {_sig}')
+    
+    hmfluxPro.disconnect()
+    camera.disconnect()
+
+
+
+

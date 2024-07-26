@@ -62,6 +62,9 @@ class SLMGUI(BaseGUI):
             lambda: self._liveUpdate() if self.liveUpdate else None)
         self.slmViewer.box1Gui.changed.connect(
             lambda: self._liveUpdate() if self.liveUpdate else None)
+        self.slmViewer.box2Gui.changed.connect(
+            lambda: self._liveUpdate() if self.liveUpdate else None)
+        
 
 
     def setDevice(self,device):

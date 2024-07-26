@@ -52,6 +52,7 @@ def test_SLMGUI():
 
     slm.disconnect()
 
+@pytest.mark.GUI
 def test_smarACTStage():
     ''' check if smarACT stage in gui works'''
     from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
@@ -71,10 +72,80 @@ def test_smarACTStage():
 
     stage.disconnect()
 
-
+@pytest.mark.GUI
 def test_SLMViewer():
     ''' testing the slm viewer'''
     from hmflux.gui.slmViewer import SLMViewer
 
     sv = SLMViewer()
     sv.run()
+
+@pytest.mark.GUI
+def test_seqStageGUI():
+    ''' test if seqStageGUI works'''
+    from hmflux.instrument.stageSequencer import StageSequencer
+    from viscope.instrument.virtual.virtualCamera import VirtualCamera
+    from viscope.instrument.virtual.virtualSLM import VirtualSLM
+    from viscope.instrument.virtual.virtualStage import VirtualStage
+
+    from viscope.main import viscope
+    from hmflux.gui.seqStageGUI import SeqStageGUI
+
+    #camera
+    camera = VirtualCamera(name='VirtualCamera')
+    camera.connect()
+    camera.setParameter('exposureTime', 300)
+    camera.setParameter('nFrame', 1)
+    # slm
+    slm = VirtualSLM(name='Virtual SLM')
+    slm.connect()
+    # stage
+    stage = VirtualStage(name='virtual Stage')
+    stage.connect()
+    # stage Sequencer
+    seq = StageSequencer()
+    seq.connect(camera=camera, stage=stage,slm=slm)
+    
+    # add gui
+    newGUI  = SeqStageGUI(viscope)
+    newGUI.setDevice(seq)
+    
+
+    # main event loop
+    viscope.run()
+
+    seq.disconnect()
+    camera.disconnect()
+    slm.disconnect()
+    stage.disconnect()
+
+@pytest.mark.GUI
+def test_emitterDataGUI():
+    ''' test if emitterDataGUI works'''
+    from viscope.instrument.virtual.virtualCamera import VirtualCamera
+    from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
+
+    from viscope.main import viscope
+    from hmflux.gui.emitterDataGUI import EmitterDataGUI
+
+    #camera
+    camera = VirtualCamera(name='VirtualCamera')
+    camera.connect()
+    camera.setParameter('exposureTime', 300)
+    camera.setParameter('nFrame', 1)
+    camera.setParameter('threadingNow', True)
+
+    # processor
+    hmfluxPro = HMFluxProcessor()
+    hmfluxPro.connect(camera=camera)
+    hmfluxPro.setParameter('threadingNow', True)
+
+    # add gui
+    newGUI  = EmitterDataGUI(viscope)
+    newGUI.setDevice(hmfluxPro)
+    
+    # main event loop
+    viscope.run()
+
+    hmfluxPro.disconnect()
+    camera.disconnect()

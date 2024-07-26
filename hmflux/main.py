@@ -5,8 +5,10 @@ main class for holo min flux
 
 from viscope.main import viscope
 from viscope.gui.allDeviceGUI import AllDeviceGUI    
-from hmflux.gui.saveImageGUI import SaveImageGUI
+from viscope.gui.saveImageGUI import SaveImageGUI
 from hmflux.gui.slmGUI import SLMGUI
+from hmflux.gui.seqStageGUI import SeqStageGUI
+from hmflux.gui.emitterDataGUI import EmitterDataGUI
 
 from pathlib import Path
 
@@ -20,6 +22,7 @@ class HMFlux():
         '''  set the all the parameter and then run the GUI'''
 
         from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
+        from hmflux.instrument.camera.teledyneCamera.teledyneCamera import TeledyneCamera
         from hmflux.instrument.camera.avCamera.avCamera import AVCamera        
         from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
         from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
@@ -28,8 +31,15 @@ class HMFlux():
         # some global settings
         viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
 
+        # #camera
+        # camera = AndorCamera(name='AndorCamera')
+        # camera.connect()
+        # camera.setParameter('exposureTime', 300)
+        # camera.setParameter('nFrame', 1)
+        # camera.setParameter('threadingNow',True)
+
         #camera
-        camera = AndorCamera(name='AndorCamera')
+        camera = TeledyneCamera(name='TeledyneCamera')
         camera.connect()
         camera.setParameter('exposureTime', 300)
         camera.setParameter('nFrame', 1)
@@ -74,6 +84,8 @@ class HMFlux():
         from viscope.instrument.virtual.virtualCamera import VirtualCamera
         from viscope.instrument.virtual.virtualSLM import VirtualSLM
         from viscope.instrument.virtual.virtualStage import VirtualStage
+        from hmflux.instrument.stageSequencer import StageSequencer
+        from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
 
         # some global settings
         viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
@@ -93,18 +105,33 @@ class HMFlux():
         stage = VirtualStage('stage')
         stage.connect()
 
+        # stage Sequencer
+        seq = StageSequencer()
+        seq.connect(camera=camera, stage=stage,slm=slm)
+
+        # processor
+        hmfluxPro = HMFluxProcessor()
+        hmfluxPro.connect(camera=camera)
+        hmfluxPro.setParameter('threadingNow', True)
+
+
         # set GUIs
         newGUI = AllDeviceGUI(viscope)
         newGUI.setDevice([camera,stage])
-        newGUI = SLMGUI(viscope)
+        newGUI = SLMGUI(viscope,vWindow='new')
         newGUI.setDevice(slm)
         newGUI = SaveImageGUI(viscope)
         newGUI.setDevice(camera)
-
+        newGUI  = SeqStageGUI(viscope)
+        newGUI.setDevice(seq)
+        newGUI  = EmitterDataGUI(viscope,vWindow='new')
+        newGUI.setDevice(hmfluxPro)
 
         # main event loop
         viscope.run()
 
+        hmfluxPro.disconnect()
+        seq.disconnect()
         camera.disconnect()
         stage.disconnect()
         slm.disconnect()
@@ -112,6 +139,7 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    HMFlux.runReal()
+    #HMFlux.runReal()
+    HMFlux.runVirtual()
 
 #%%

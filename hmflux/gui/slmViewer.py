@@ -40,8 +40,11 @@ class SLMViewer():
         
         if self.imageType == 'sinus':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
-            im += self.imageSLM.generateSinGrating(self.sinWaveGui.stepIdx.value,
-                                                   self.sinWaveGui.nStep.value)
+            im += self.imageSLM.generateSinGrating(self.sinWaveGui.axis.value,
+                                                   self.sinWaveGui.stepIdx.value,
+                                                   self.sinWaveGui.nStep.value,
+                                                   self.sinWaveGui.period.value,
+                                                   self.sinWaveGui.spectrumShift.value)
 
         if self.imageType == 'binary':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
@@ -62,6 +65,20 @@ class SLMViewer():
                                             halfwidth=self.box1Gui.halfwidth.value,
                                             bcgImage=im)
             
+        if self.imageType == 'box2':
+            im = self.imageSLM.generateConstant(self.constGui.const.value)
+            im += self.imageSLM.generateBinaryGrating(1-self.box2Gui.axis.value,
+                                                      self.binaryGui.rVal.value[0],
+                                                      self.binaryGui.rVal.value[1])
+            im = self.imageSLM.generateBox2(axis=self.box2Gui.axis.value,
+                                            position=self.box2Gui.position.value,
+                                            val0=self.box2Gui.rVal.value[0],
+                                            val1=self.box2Gui.rVal.value[1],
+                                            weightFactor=self.box2Gui.weightFactor.value,
+                                            compensation=self.box2Gui.compensation.value,
+                                            halfwidth=self.box2Gui.halfwidth.value,
+                                            bcgImage=im)
+            
         self.imageLayer.data = im
 
 
@@ -70,7 +87,7 @@ class SLMViewer():
 
         @magicgui(auto_call='True',
                   imageType={
-        "choices": ("constant", "sinus", "binary", "box1"),
+        "choices": ("constant", "sinus", "binary", "box1", "box2"),
         "allow_multiple": False,
         })
         def choiceGui(imageType=(self.imageType)):
@@ -83,8 +100,11 @@ class SLMViewer():
             self.generateImage()
 
         @magicgui(auto_call= 'True',
-                  stepIdx={"widget_type": "Slider", "min":-20, "max": 20})
-        def sinWaveGui(stepIdx = 0, nStep = 10):
+                  axis={'max':1},
+                  stepIdx={"widget_type": "Slider", "min":-20, "max": 20},
+                  period={"widget_type": "Slider", "min":2, "max": 512},
+                  spectrumShift={"widget_type": "SpinBox", "min":0, "max": 256})
+        def sinWaveGui(axis=0,stepIdx = 0, nStep = 10, period = 50, spectrumShift=0):
             sinWaveGui.stepIdx.min = -2*sinWaveGui.nStep.value
             sinWaveGui.stepIdx.max =  2*sinWaveGui.nStep.value
             
@@ -102,7 +122,7 @@ class SLMViewer():
                   rVal={"widget_type": "RangeSlider", "max": 255},
                   halfwidth={"widget_type": "Slider", "max": self.imageSLM.sizeY//2}
                   )
-        def box1Gui(axis = 0,position= self.imageSLM.sizeY//2, rVal = (0,255), halfwidth=6):
+        def box1Gui(axis = 0,position= self.imageSLM.sizeY//2, rVal = (0,255), halfwidth=3):
             
             if axis ==0 and box1Gui.position.max != self.imageSLM.sizeY:
                 box1Gui.position.max = self.imageSLM.sizeY
@@ -114,11 +134,32 @@ class SLMViewer():
 
             self.generateImage()
 
+        @magicgui(auto_call= 'True',
+                  axis = {"max":1},
+                  position={"widget_type": "Slider", "max": self.imageSLM.sizeY},
+                  rVal={"widget_type": "RangeSlider", "max": 255},
+                  weightFactor = {"widget_type": "FloatSlider", "max": 1, "min":0},
+                  compensation = {"widget_type": "Slider", "max": 255},
+                  halfwidth={"widget_type": "Slider", "max": self.imageSLM.sizeY//2}
+                  )
+        def box2Gui(axis = 0, position = self.imageSLM.sizeY//2, rVal = (0,255), weightFactor = 0.0, compensation = 0, halfwidth = 2):
+            if axis ==0 and box2Gui.position.max != self.imageSLM.sizeY:
+                box2Gui.position.max = self.imageSLM.sizeY
+                box2Gui.halfwidth.max = self.imageSLM.sizeY//2
+
+            if axis ==1 and box2Gui.position.max != self.imageSLM.sizeX:
+                box2Gui.position.max = self.imageSLM.sizeX
+                box2Gui.halfwidth.max = self.imageSLM.sizeX//2
+
+            self.generateImage()
+            
+
         self.choiceGui = choiceGui
         self.sinWaveGui = sinWaveGui
         self.binaryGui = binaryGui
         self.constGui = constGui
         self.box1Gui = box1Gui
+        self.box2Gui = box2Gui
 
         # add widget 
         dw = self.viewer.window.add_dock_widget(self.choiceGui, name ='choice', area='bottom')
@@ -137,6 +178,10 @@ class SLMViewer():
         dw = self.viewer.window.add_dock_widget(self.box1Gui, name ='box1Gui', area='bottom')
         self.viewer.window._qt_window.tabifyDockWidget(self.dockWidgetParameter,dw)
         self.dockWidgetParameter = dw
+        dw = self.viewer.window.add_dock_widget(self.box2Gui, name ='box2Gui', area='bottom')
+        self.viewer.window._qt_window.tabifyDockWidget(self.dockWidgetParameter,dw)
+        self.dockWidgetParameter = dw
+
 
 
     def run(self):
