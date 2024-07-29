@@ -131,9 +131,12 @@ class SmarACTStage(BaseStage):
     def _setPosition(self,newPosition):
         ''' move the stage. wait until the movement is finished'''
 
-        self.setPosition(newPosition[0], axis= 'X', wait_for_it=True)
-        self.setPosition(newPosition[1], axis= 'Y', wait_for_it=True)
-        self.setPosition(newPosition[2], axis= 'Z', wait_for_it=True)
+        if self.position[0] !=newPosition[0]:      
+            self.setPosition(newPosition[0], axis= 'X', wait_for_it=True)
+        if self.position[1] !=newPosition[1]:      
+            self.setPosition(newPosition[1], axis= 'Y', wait_for_it=True)
+        if self.position[2] !=newPosition[2]:      
+            self.setPosition(newPosition[2], axis= 'Z', wait_for_it=True)
 
         self._getPosition()
 
@@ -152,11 +155,16 @@ class SmarACTStage(BaseStage):
         self.setPosition(new_position, axis)
 
     def getPosition(self, axis):
-        return self._get_position_channel(self.axis_lookup_table[axis])
+        # for debugging purposes
+        _value = self._get_position_channel(self.axis_lookup_table[axis])
+        print (f'position = {_value}')
+        return _value
 
     def setPosition(self, position: float, axis: str, wait_for_it=True):
         axis_num = self.axis_lookup_table[axis]
         t = position * MU2NM
+        print(f'seting position nm: {t}')
+
         self.ExitIfError(
             SA_GotoPositionAbsolute_S(
                 self.mcsHandle,
@@ -258,7 +266,10 @@ class SmarACTStage(BaseStage):
         """Get position for channel channel. """
         x_cor = ct.c_ulong()
         self.ExitIfError(SA_GetPosition_S(self.mcsHandle, ct.c_ulong(channel), x_cor))
-        return self.c_convert(x_cor.value) / MU2NM
+        _value = self.c_convert(x_cor.value)
+        print(f'position in nm: {_value}')
+        print(f'position in um: {_value / MU2NM}')
+        return _value / MU2NM
 
     def wait_for_status(self, target_statuses=(SA_STOPPED_STATUS, SA_HOLDING_STATUS)):
         """Wait for the stage to reach status X.

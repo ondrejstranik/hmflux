@@ -70,6 +70,9 @@ class StageSequencer(RecordSequencer):
             if keyboard.is_pressed('ctrl+q'):
                 print("Loop aborted")
 
+        # start the camera acquisition
+        self.camera.startAcquisition()
+
 
 
 #%%

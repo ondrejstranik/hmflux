@@ -96,7 +96,7 @@ class SeqStageGUI(BaseGUI):
 
         # resume working camera thread
         if self.device.camera.worker is not None:
-                self.device.camera.worker.resume()        
+                self.device.camera.worker.resume()    
         
 
 

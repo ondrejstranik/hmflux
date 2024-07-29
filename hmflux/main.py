@@ -26,10 +26,15 @@ class HMFlux():
         from hmflux.instrument.camera.avCamera.avCamera import AVCamera        
         from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
         from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
-
+        from hmflux.instrument.stageSequencer import StageSequencer
+        from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
 
         # some global settings
         viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
+
+        # stage
+        stage = SmarACTStage('stage')
+        stage.connect()
 
         # #camera
         # camera = AndorCamera(name='AndorCamera')
@@ -56,19 +61,29 @@ class HMFlux():
         slm = ScreenSLM('slm')
         slm.connect()
 
-        # stage
-        stage = SmarACTStage('stage')
-        stage.connect()
 
 
+        # stage Sequencer
+        seq = StageSequencer()
+        seq.connect(camera=camera, stage=stage,slm=slm)
+
+        # processor
+        hmfluxPro = HMFluxProcessor()
+        hmfluxPro.connect(camera=camera)
+        hmfluxPro.setParameter('threadingNow', True)
 
         # set GUIs
         viewer  = AllDeviceGUI(viscope)
         viewer.setDevice([stage,camera,camera2])
-        newGUI = SLMGUI(viscope)
+        newGUI = SLMGUI(viscope,vWindow='new')
         newGUI.setDevice(slm)
         newGUI  = SaveImageGUI(viscope)
         newGUI.setDevice(camera)
+        newGUI  = SeqStageGUI(viscope)
+        newGUI.setDevice(seq)
+        newGUI  = EmitterDataGUI(viscope,vWindow='new')
+        newGUI.setDevice(hmfluxPro)
+
 
         # main event loop
         viscope.run()
@@ -139,7 +154,7 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    #HMFlux.runReal()
-    HMFlux.runVirtual()
+    HMFlux.runReal()
+    #HMFlux.runVirtual()
 
 #%%

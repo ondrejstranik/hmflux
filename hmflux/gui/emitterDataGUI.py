@@ -30,7 +30,9 @@ class EmitterDataGUI(BaseGUI):
     def _setWidget(self):
         ''' prepare the gui '''
 
-        @magicgui(auto_call=True)
+        @magicgui(auto_call=True,
+                  xPos={'max':10000},
+                  yPos={'max':10000})
         def fitParameter(
             xPos: int = 0,
             yPos: int = 0,
