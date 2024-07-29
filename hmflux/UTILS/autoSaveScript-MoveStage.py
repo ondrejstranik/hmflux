@@ -35,7 +35,7 @@ class AutoSave():
         self.stage.connect()
 
         #all parameters
-        self.folderName = '20240725-104'
+        self.folderName = '20240729-107'
         self.dataFolder = r'E:\ZihaoData\DATA\PrimeBSI'
         # self.dataFolder = r'.\hmflux\DATA'
         self.path = self.dataFolder+'./'+self.folderName
@@ -62,7 +62,7 @@ class AutoSave():
         self.boxAxis = 0
         self.boxPosition = 333
         self.boxValue0 = 0
-        self.boxValue1 = 104
+        self.boxValue1 = 107
         self.boxHalfwidth = 3
         self.bcgImage = None
 

@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 
 # path = r'.\hmflux\DATA\20240723-autoTest-1'
-path = r'E:\ZihaoData\DATA\PrimeBSI\20240725-100'
+path = r'E:\ZihaoData\DATA\PrimeBSI\20240729-105'
 # pathConsant = (path+'./'+'Binary')
 pathBox = (path+'./'+'Box')
 # pathDark = (path+'./'+'Dark')
