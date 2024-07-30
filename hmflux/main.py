@@ -5,6 +5,8 @@ main class for holo min flux
 
 from viscope.main import viscope
 from viscope.gui.allDeviceGUI import AllDeviceGUI    
+from viscope.gui.cameraGUI import CameraGUI
+from viscope.gui.cameraViewGUI import CameraViewGUI
 from viscope.gui.saveImageGUI import SaveImageGUI
 from hmflux.gui.slmGUI import SLMGUI
 from hmflux.gui.seqStageGUI import SeqStageGUI
@@ -117,15 +119,21 @@ class HMFlux():
 
         # set GUIs
         newGUI = AllDeviceGUI(viscope)
-        newGUI.setDevice([camera,stage])
-        newGUI = SLMGUI(viscope,vWindow='new')
-        newGUI.setDevice(slm)
+        newGUI.setDevice([stage])
         newGUI = SaveImageGUI(viscope)
         newGUI.setDevice(camera)
         newGUI  = SeqStageGUI(viscope)
         newGUI.setDevice(seq)
+        newGUI = CameraGUI(viscope,vWindow='new')
+        newGUI.setDevice(camera)
+        newGUI = CameraViewGUI(viscope,vWindow=newGUI.vWindow)
+        newGUI.setDevice(camera)
+        _viewer = newGUI.viewer
+        newGUI = SLMGUI(viscope,vWindow='new')
+        newGUI.setDevice(slm)
         newGUI  = EmitterDataGUI(viscope,vWindow='new')
         newGUI.setDevice(hmfluxPro)
+        newGUI.connectViewer(_viewer)
 
         # main event loop
         viscope.run()
