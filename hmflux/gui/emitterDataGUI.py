@@ -24,6 +24,11 @@ class EmitterDataGUI(BaseGUI):
         self.fitParameter = None
         self.graph = None
 
+        
+        self.viewer = None
+        self.maskLayer = None
+        self.pointLayer = None
+
         # set this gui of this class
         EmitterDataGUI._setWidget(self)
 
@@ -41,6 +46,22 @@ class EmitterDataGUI(BaseGUI):
             self.device.yPos = yPos
             self.device.deltaX = deltaX
             self.device.deltaY = deltaY
+            
+            self.fitParameter._auto_call = False
+            self.fitParameter.xPos.value = xPos
+            self.fitParameter.yPos.value = yPos
+            self.fitParameter.deltaX.value = deltaX
+            self.fitParameter.deltaY.value = deltaY
+            self.fitParameter._auto_call = True
+
+
+            if self.viewer is None: return
+           
+            # update mask layer
+            mask = self.device.camera.rawImage*0
+            mask[yPos:yPos+deltaY,xPos:xPos+deltaX] = 1
+            self.maskLayer.data = mask
+
 
 
         @magicgui(call_button="clear")
@@ -108,6 +129,37 @@ class EmitterDataGUI(BaseGUI):
 
         # connect signals
         self.device.worker.yielded.connect(self.guiUpdateTimed)
+
+
+    def connectViewer(self,viewer=None):
+        ''' connect the detection area with a viewer'''
+        self.viewer = viewer
+
+        if self.viewer is not None:
+
+            colors = np.linspace(
+                start=[0, 1, 0, 1],
+                stop=[1, 0, 0, 1],
+                num=3,
+                endpoint=True
+            )
+            colors[0] = np.array([0., 1., 0., 0])
+            transparentRedGreen_colormap = {
+            'colors': colors,
+            'name': 'red_and_green',
+            'interpolation': 'linear'
+            }
+            self.maskLayer = self.viewer.add_image(np.zeros((2,2)), name='spot_mask',
+            colormap=transparentRedGreen_colormap, opacity = 0.5)
+
+            @self.maskLayer.mouse_double_click_callbacks.append
+            def on_second_click_of_double_click(layer, event):
+                self.fitParameter(
+                xPos = int(event.position[1]),
+                yPos = int(event.position[0]),
+                deltaX = self.fitParameter.deltaX.value,
+                deltaY = self.fitParameter.deltaY.value
+                )
 
 
     def updateGui(self):
