@@ -55,41 +55,12 @@ class EmitterDataGUI(BaseGUI):
             self.fitParameter._auto_call = True
 
 
-            #if self.viewer is None: return
-
-            # update point layer
-            point = np.array([[yPos, xPos]])
-            #if self.pointLayer is None:
-            #    self.pointLayer = self.viewer.add_points(
-            #        point, name='point', size=5, face_color='red')
-            #else:
+            if self.viewer is None: return
            
-            self.pointLayer.data[0,1] = xPos
-            self.pointLayer.data[0,0] = yPos
-            self.pointLayer.refresh()
-            print(f'pointLayer.data {self.pointLayer.data}')
-
             # update mask layer
             mask = self.device.camera.rawImage*0
             mask[yPos:yPos+deltaY,xPos:xPos+deltaX] = 1
-            if self.maskLayer is None:
-                # define a colormap with transparent 0 values
-                colors = np.linspace(
-                    start=[0, 1, 0, 1],
-                    stop=[1, 0, 0, 1],
-                    num=3,
-                    endpoint=True
-                )
-                colors[0] = np.array([0., 1., 0., 0])
-                transparentRedGreen_colormap = {
-                'colors': colors,
-                'name': 'red_and_green',
-                'interpolation': 'linear'
-                }
-                self.maskLayer = self.viewer.add_image(mask, name='spot_mask',
-                colormap=transparentRedGreen_colormap, opacity = 0.5)
-            else:
-                self.maskLayer.data = mask
+            self.maskLayer.data = mask
 
 
 
@@ -165,15 +136,30 @@ class EmitterDataGUI(BaseGUI):
         self.viewer = viewer
 
         if self.viewer is not None:
-            point = np.array([[self.fitParameter.yPos.value, self.fitParameter.xPos.value]])
-            self.pointLayer = self.viewer.add_points(point, name='point', size=5, face_color='red')
-            self.pointLayer.events.data.connect(lambda: self.fitParameter(
-                xPos = int(self.pointLayer.data[0,1]),
-                yPos = int(self.pointLayer.data[0,0]),
+
+            colors = np.linspace(
+                start=[0, 1, 0, 1],
+                stop=[1, 0, 0, 1],
+                num=3,
+                endpoint=True
+            )
+            colors[0] = np.array([0., 1., 0., 0])
+            transparentRedGreen_colormap = {
+            'colors': colors,
+            'name': 'red_and_green',
+            'interpolation': 'linear'
+            }
+            self.maskLayer = self.viewer.add_image(np.zeros((2,2)), name='spot_mask',
+            colormap=transparentRedGreen_colormap, opacity = 0.5)
+
+            @self.maskLayer.mouse_double_click_callbacks.append
+            def on_second_click_of_double_click(layer, event):
+                self.fitParameter(
+                xPos = int(event.position[1]),
+                yPos = int(event.position[0]),
                 deltaX = self.fitParameter.deltaX.value,
                 deltaY = self.fitParameter.deltaY.value
-            ))
-
+                )
 
 
     def updateGui(self):
