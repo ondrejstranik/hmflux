@@ -101,6 +101,22 @@ class ImageSLM:
 
         return im
 
+    def generateSlantedGrating(self,axis=0,val0=0,val1=63,val2=127,val3=191):
+        ''' generate slanted four pixel grating
+        it should make homogenous illumination, if the values are 0, pi/2, pi, 3/2*pi'''
+        im  = np.zeros((self.sizeY,self.sizeX))+ val0
+        if axis == 0:
+            im[1::4,:]= val1
+            im[2::4,:]= val2
+            im[3::4,:]= val3
+        else:
+            im[:,1::4]= val1
+            im[:,2::4]= val2
+            im[:,3::4]= val3
+        self.image = self.clipValue(im)
+
+        return im
+
     def generateBox1(self,axis=0,position= None, val0=0,val1=255,halfwidth=3,bcgImage=None):
         ''' box generation for minima'''
 
