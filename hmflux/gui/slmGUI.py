@@ -54,6 +54,8 @@ class SLMGUI(BaseGUI):
         # connect signal from slmviewer for liveupdate
         self.slmViewer.sinWaveGui.changed.connect(
             lambda: self._liveUpdate() if self.liveUpdate else None)
+        self.slmViewer.slantedGui.changed.connect(
+            lambda: self._liveUpdate() if self.liveUpdate else None)
         self.slmViewer.binaryGui.changed.connect(
             lambda: self._liveUpdate() if self.liveUpdate else None)
         self.slmViewer.choiceGui.changed.connect(
