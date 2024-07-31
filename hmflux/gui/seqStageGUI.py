@@ -98,6 +98,8 @@ class SeqStageGUI(BaseGUI):
         if self.device.camera.worker is not None:
                 self.device.camera.worker.resume()    
         
+        self.viewer = None
+        
 
 
 

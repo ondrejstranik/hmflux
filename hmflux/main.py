@@ -32,7 +32,8 @@ class HMFlux():
         from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
 
         # some global settings
-        viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
+        # viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
+        viscope.dataFolder = str(Path(r'E:\ZihaoData\DATA\PrimeBSI'))
 
         # stage
         stage = SmarACTStage('stage')
@@ -74,18 +75,24 @@ class HMFlux():
         hmfluxPro.connect(camera=camera)
         hmfluxPro.setParameter('threadingNow', True)
 
+        
         # set GUIs
-        viewer  = AllDeviceGUI(viscope)
-        viewer.setDevice([stage,camera,camera2])
-        newGUI = SLMGUI(viscope,vWindow='new')
-        newGUI.setDevice(slm)
-        newGUI  = SaveImageGUI(viscope)
+        newGUI = AllDeviceGUI(viscope)
+        newGUI.setDevice([stage,camera2])
+        newGUI = SaveImageGUI(viscope)
         newGUI.setDevice(camera)
         newGUI  = SeqStageGUI(viscope)
         newGUI.setDevice(seq)
+        newGUI = CameraGUI(viscope,vWindow='new')
+        newGUI.setDevice(camera)
+        newGUI = CameraViewGUI(viscope,vWindow=newGUI.vWindow)
+        newGUI.setDevice(camera)
+        _viewer = newGUI.viewer
+        newGUI = SLMGUI(viscope,vWindow='new')
+        newGUI.setDevice(slm)
         newGUI  = EmitterDataGUI(viscope,vWindow='new')
         newGUI.setDevice(hmfluxPro)
-
+        newGUI.connectViewer(_viewer)
 
         # main event loop
         viscope.run()
