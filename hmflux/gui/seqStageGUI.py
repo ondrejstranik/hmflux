@@ -7,8 +7,10 @@ import numpy as np
 import time
 
 from viscope.gui.baseGUI import BaseGUI
-from magicgui import magicgui
 from viscope.gui.napariGUI import NapariGUI
+from magicgui import magicgui
+
+import pyqtgraph as pg
 
 class SeqStageGUI(BaseGUI):
     ''' main class to save image'''
@@ -72,6 +74,13 @@ class SeqStageGUI(BaseGUI):
             self.device.worker.yielded.connect(self.guiUpdateTimed)
             self.device.worker.finished.connect(self.afterProcess)
 
+            # set roi if processor exist
+            if self.processor is not None:
+                self.device.roi = [self.processor.xPos,
+                                   self.processor.yPos,
+                                   self.processor.deltaX,
+                                   self.processor.deltaY]
+
             # start the sequencer
             self.device.worker.start()
 
@@ -79,10 +88,14 @@ class SeqStageGUI(BaseGUI):
         self.seqGui = seqGui
         self.vWindow.addParameterGui(self.seqGui,name=self.DEFAULT['nameGUI'])
  
-    def setDevice(self,device):
+    def setDevice(self,device,processor = None):
         super().setDevice(device)
         self.seqGui.filePath.value = Path(self.device.dataFolder).parent
         self.seqGui.fileName.value = str(Path(self.device.dataFolder).stem)
+
+        # if processor exist, than it defines the ROI for saving the image stack
+        self.processor = processor
+
 
     def updateGui(self):
         ''' update the data in gui '''
@@ -93,6 +106,12 @@ class SeqStageGUI(BaseGUI):
 
         # show the whole data
         self.dataLayer.data = self.device.imageSet
+
+        # show the sum of the each image in imageset
+        #print(f'intensitySum= {intensitySum}')
+        intensitySum = np.sum(self.device.imageSet,axis=(1,2))
+        pg.plot(intensitySum)
+
 
         # resume working camera thread
         if self.device.camera.worker is not None:

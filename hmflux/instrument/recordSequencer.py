@@ -31,6 +31,9 @@ class RecordSequencer(BaseSequencer):
 
         self.dataFolder = None
 
+        # ROI of the camera
+        self.roi = None
+
 
     def connect(self,camera=None,stage=None,slm=None):
         ''' connect sequencer with the camera, stage, slm '''
@@ -49,6 +52,8 @@ class RecordSequencer(BaseSequencer):
             self.stage = value
         if name== 'slm':
             self.slm = value
+        if name== 'roi':
+            self.roi = value
 
     def getParameter(self,name):
         ''' get parameter of the camera '''
@@ -61,6 +66,10 @@ class RecordSequencer(BaseSequencer):
             return self.stage
         if name== 'slm':
             return self.slm
+        if name== 'roi':
+            return self.roi
+
+
 
 #%%
 
