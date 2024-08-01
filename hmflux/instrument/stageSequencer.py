@@ -55,6 +55,11 @@ class StageSequencer(RecordSequencer):
             self.image = self.camera.getLastImage()
             self.camera.stopAcquisition()
 
+            #select ROI from image
+            if self.roi is not None:
+                self.image = self.image[self.roi[1]:self.roi[1]+self.roi[3],
+                                        self.roi[0]:self.roi[0]+self.roi[2]]
+
             # add image to the imageSet
             if ii==0:
                 self.imageSet = np.empty((self.numberOfImage,*self.image.shape))
