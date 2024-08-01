@@ -7,7 +7,7 @@ import time
 
 
 class EmitterData:
-    ''' class for processing signal from emitters
+    ''' container for signal from emitters
         (this is a copy of a class spotDAta from package --plim--) '''
     DEFAULT = {}
 
