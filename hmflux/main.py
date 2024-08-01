@@ -82,7 +82,7 @@ class HMFlux():
         newGUI = SaveImageGUI(viscope)
         newGUI.setDevice(camera)
         newGUI  = SeqStageGUI(viscope)
-        newGUI.setDevice(seq)
+        newGUI.setDevice(seq,processor=hmfluxPro)
         newGUI = CameraGUI(viscope,vWindow='new')
         newGUI.setDevice(camera)
         newGUI = CameraViewGUI(viscope,vWindow=newGUI.vWindow)

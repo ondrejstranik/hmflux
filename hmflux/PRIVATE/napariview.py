@@ -3,9 +3,10 @@ import napari
 import os
 import numpy as np
 from pathlib import Path
+import pyqtgraph as pg
 
 # path = r'.\hmflux\DATA\20240723-autoTest-1'
-path = r'E:\ZihaoData\DATA\PrimeBSI\20240730_110'
+path = r'E:\ZihaoData\DATA\PrimeBSI\20240801-horizontal_001'
 # pathConsant = (path+'./'+'Binary')
 # pathBox = (path+'./'+'Box')
 # pathDark = (path+'./'+'Dark')
@@ -34,6 +35,8 @@ viewer = napari.Viewer()
 # viewer.add_image(np.array(constantImage), name='binary')
 viewer.add_image(np.array(boxImage), name='box')
 # viewer.add_image(np.array(darkImage), name='dark')
+intensitySum = np.sum(boxImage,axis=(1,2))
+pg.plot(intensitySum)
 
 napari.run()
 
