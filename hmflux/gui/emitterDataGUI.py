@@ -130,12 +130,10 @@ class EmitterDataGUI(BaseGUI):
         # connect signals
         self.device.worker.yielded.connect(self.guiUpdateTimed)
 
-
-    def connectViewer(self,viewer=None):
-        ''' connect the detection area with a viewer'''
-        self.viewer = viewer
-
-        if self.viewer is not None:
+    def interconnectGui(self,cameraViewGUI=None):
+        ''' connect with other gui'''
+        if cameraViewGUI is not None:
+            self.viewer = cameraViewGUI.viewer 
 
             colors = np.linspace(
                 start=[0, 1, 0, 1],

@@ -11,7 +11,7 @@ class EmitterImage:
     DEFAULT = {}
 
 
-    def __init__(self,imageSet = None, **kwarg):
+    def __init__(self,imageSet:np.ndarray = None, **kwarg):
         ''' initialization of the parameters '''
         self.imageSet = imageSet
         self.signal = None 
@@ -27,7 +27,10 @@ class EmitterImage:
     def getSignal(self):
         ''' calculate signal from image set'''
 
-        self.signal = np.sum(self.imageSet,axis=(1,2))
+        if self.imageSet.ndim >2:
+            self.signal = np.sum(self.imageSet,axis=(1,2))
+        if self.imageSet.ndim ==2:
+            self.signal = np.sum(self.imageSet)
 
         return self.signal
 

@@ -149,3 +149,32 @@ def test_emitterDataGUI():
 
     hmfluxPro.disconnect()
     camera.disconnect()
+
+@pytest.mark.GUI
+def test_emitterImageViewer():
+    from hmflux.gui.emitterImageViewer import EmitterImageViewer
+    from hmflux.algorithm.emitterImage import EmitterImage
+    import numpy as np
+
+    ei = EmitterImage(imageSet= np.random.rand(10,5,20))
+    
+    eiViewer = EmitterImageViewer()
+    eiViewer.setEmitterImage(ei)
+
+    eiViewer.run()
+
+
+@pytest.mark.GUI
+def test_emitterImageGUI():
+    from hmflux.gui.emitterImageGUI import EmitterImageGUI
+    from hmflux.algorithm.emitterImage import EmitterImage
+    from viscope.main import viscope
+    import numpy as np
+
+    ei = EmitterImage(imageSet= np.random.rand(10,5,20))
+
+    eiGui = EmitterImageGUI(viscope=viscope)
+    eiGui.setData(ei)
+
+    viscope.run()
+
