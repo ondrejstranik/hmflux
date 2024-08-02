@@ -48,6 +48,38 @@ def test_AVCameraGui():
     camera.disconnect()
 
 
+def test_CoboltLaser():
+    from hmflux.instrument.laser.coboltLaser import CoboltLaser
+
+    laser = CoboltLaser()
+    laser.connect()
+    laser.setParameter('keySwitch',True)
+    print('set power to 1 mW')
+    laser.setParameter('power', 1)
+    time.sleep(10)
+    print('set power to 3 mW')
+    laser.setParameter('power', 3)
+    time.sleep(10)
+    laser.disconnect()    
+
+def test_CoboltLaserGui():
+    from hmflux.instrument.laser.coboltLaser import CoboltLaser
+    from viscope.main import viscope
+    from viscope.gui.allDeviceGUI import AllDeviceGUI
+
+    laser = CoboltLaser()
+    laser.connect()
+
+    # add gui
+    adGui  = AllDeviceGUI(viscope)
+    adGui.setDevice(laser)
+    # main event loop
+    viscope.run()
+
+    laser.disconnect()
+
+
+
 @pytest.mark.GUI
 def test_screenSLM():
     ''' check if slm works'''
