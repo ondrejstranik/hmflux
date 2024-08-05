@@ -30,6 +30,8 @@ class HMFlux():
         from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
         from hmflux.instrument.stageSequencer import StageSequencer
         from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
+        from hmflux.instrument.switch.throlabSwitch import ThrolabSwitch
+        from hmflux.instrument.laser.coboltLaser import CoboltLaser
 
         # some global settings
         # viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
@@ -64,11 +66,18 @@ class HMFlux():
         slm = ScreenSLM('slm')
         slm.connect()
 
+        # switch
+        switch = ThrolabSwitch('switch')
+        switch.connect(port='COM6')
+        switch.positionList = ['OD1','OD2','OD3','OD4','OD5','OD6']
 
+        #laser
+        laser = CoboltLaser()
+        laser.connect()
 
         # stage Sequencer
         seq = StageSequencer()
-        seq.connect(camera=camera, stage=stage,slm=slm)
+        seq.connect(camera=camera, stage=stage,slm=slm,laser=laser)
 
         # processor
         hmfluxPro = HMFluxProcessor()
@@ -77,22 +86,41 @@ class HMFlux():
 
         
         # set GUIs
-        newGUI = AllDeviceGUI(viscope)
-        newGUI.setDevice([stage,camera2])
-        newGUI = SaveImageGUI(viscope)
-        newGUI.setDevice(camera)
-        newGUI  = SeqStageGUI(viscope)
-        newGUI.setDevice(seq,processor=hmfluxPro)
-        newGUI = CameraGUI(viscope,vWindow='new')
-        newGUI.setDevice(camera)
-        newGUI = CameraViewGUI(viscope,vWindow=newGUI.vWindow)
-        newGUI.setDevice(camera)
-        _viewer = newGUI.viewer
-        newGUI = SLMGUI(viscope,vWindow='new')
-        newGUI.setDevice(slm)
-        newGUI  = EmitterDataGUI(viscope,vWindow='new')
-        newGUI.setDevice(hmfluxPro)
-        newGUI.connectViewer(_viewer)
+        adGui = AllDeviceGUI(viscope)
+        adGui.setDevice([stage,camera2,switch,laser])
+        siGui = SaveImageGUI(viscope)
+        siGui.setDevice(camera)
+
+        cGui = CameraGUI(viscope,vWindow='new')
+        cGui.setDevice(camera)
+        cvGui = CameraViewGUI(viscope,vWindow=cGui.vWindow)
+        cvGui.setDevice(camera)
+        slmGui = SLMGUI(viscope,vWindow='new')
+        slmGui.setDevice(slm)
+        edGui  = EmitterDataGUI(viscope,vWindow='new')
+        edGui.setDevice(hmfluxPro)
+        edGui.interconnectGui(cameraViewGUI=cvGui)
+    
+        ssGui  = SeqStageGUI(viscope)
+        ssGui.setDevice(seq)
+        ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
+
+        # newGUI = AllDeviceGUI(viscope)
+        # newGUI.setDevice([stage,camera2,switch,laser])
+        # newGUI = SaveImageGUI(viscope)
+        # newGUI.setDevice(camera)
+        # newGUI  = SeqStageGUI(viscope)
+        # newGUI.setDevice(seq,processor=hmfluxPro)
+        # newGUI = CameraGUI(viscope,vWindow='new')
+        # newGUI.setDevice(camera)
+        # newGUI = CameraViewGUI(viscope,vWindow=newGUI.vWindow)
+        # newGUI.setDevice(camera)
+        # _viewer = newGUI.viewer
+        # newGUI = SLMGUI(viscope,vWindow='new')
+        # newGUI.setDevice(slm)
+        # newGUI  = EmitterDataGUI(viscope,vWindow='new')
+        # newGUI.setDevice(hmfluxPro)
+        # newGUI.connectViewer(_viewer)
 
         # main event loop
         viscope.run()
@@ -100,6 +128,8 @@ class HMFlux():
         camera.disconnect()
         stage.disconnect()
         slm.disconnect()        
+        laser.disconnect()    
+        switch.disconnect()
 
 
     @classmethod

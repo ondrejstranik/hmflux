@@ -202,7 +202,7 @@ def test_thorlabSwitch():
     from viscope.gui.allDeviceGUI import AllDeviceGUI
 
     switch = ThrolabSwitch()
-    switch.connect(port='COM3')
+    switch.connect(port='COM6')
     switch.positionList = ['OD1','OD2','OD3','OD4']
 
     # add gui
@@ -212,6 +212,6 @@ def test_thorlabSwitch():
     # main event loop
     viscope.run()
 
-    stage.disconnect()
+    switch.disconnect()
 
 
