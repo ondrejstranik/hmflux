@@ -108,6 +108,8 @@ class HMFlux():
         from viscope.instrument.virtual.virtualCamera import VirtualCamera
         from viscope.instrument.virtual.virtualSLM import VirtualSLM
         from viscope.instrument.virtual.virtualStage import VirtualStage
+        from viscope.instrument.virtual.virtualSwitch import VirtualSwitch
+        from viscope.instrument.virtual.virtualLaser import VirtualLaser
         from hmflux.instrument.stageSequencer import StageSequencer
         from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
 
@@ -129,9 +131,18 @@ class HMFlux():
         stage = VirtualStage('stage')
         stage.connect()
 
+        #switch
+        switch = VirtualSwitch('switch')
+        switch.connect()
+        switch.positionList = ['OD1','OD2','OD3','OD4']
+
+        #laser
+        laser = VirtualLaser('laser')
+        laser.connect()
+
         # stage Sequencer
         seq = StageSequencer()
-        seq.connect(camera=camera, stage=stage,slm=slm)
+        seq.connect(camera=camera, stage=stage,slm=slm, laser=laser)
 
         # processor
         hmfluxPro = HMFluxProcessor()
@@ -141,7 +152,7 @@ class HMFlux():
 
         # set GUIs
         adGui = AllDeviceGUI(viscope)
-        adGui.setDevice([stage])
+        adGui.setDevice([stage,switch,laser])
         siGui = SaveImageGUI(viscope)
         siGui.setDevice(camera)
 

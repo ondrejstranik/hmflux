@@ -1,8 +1,6 @@
 #%%
 ''' class to control cobolt laser via microsocpe package'''
 
-import numpy as np
-import time
 from viscope.instrument.base.baseLaser import BaseLaser
 from microscope.lights.cobolt import CoboltLaser as MCLaser
 

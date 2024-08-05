@@ -25,6 +25,8 @@ class SeqStageGUI(BaseGUI):
         super().__init__(viscope, **kwargs)
 
         self.viewer = None
+        self.emitterDataGUI=None
+        self.cameraViewGUI=None
 
         # prepare the gui of the class
         SeqStageGUI.__setWidget(self) 
@@ -36,14 +38,16 @@ class SeqStageGUI(BaseGUI):
                   fileName={"label": "Saving folder name:"},
                             fileIdx = {"label": "File Index"},
                 stepX={'min':-10,'max':10},
-                stepY={'min':-10,'max':10})
+                stepY={'min':-10,'max':10},
+                laserPower = {'max':250})
         def seqGui(filePath= Path(self.viscope.dataFolder),
                    fileName:str = 'dataset',
                    fileIdx=0,
                    idxIncrement = True,
                    numberOfImage: int = 10,
                    stepX: float = 0.1,
-                   stepY: float = 0):
+                   stepY: float = 0,
+                   laserPower: float = 10):
             
             if idxIncrement:
                 self.device.dataFolder = str(filePath /(fileName + f'_{fileIdx:03d}'))
@@ -53,7 +57,8 @@ class SeqStageGUI(BaseGUI):
             
             self.device.numberOfImage = numberOfImage
             self.device.shiftVector = np.array([stepX,stepY,0])
-            
+            self.device.laserPower = laserPower
+
             # pause camera threading if exist
             if self.device.camera.worker is not None:
                 self.device.camera.worker.pause()
