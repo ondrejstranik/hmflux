@@ -34,6 +34,7 @@ class StageSequencer(RecordSequencer):
 
         self.image = None
         self.imageSet = None
+        self.roi = None
 
     def loop(self):
 
@@ -66,7 +67,9 @@ class StageSequencer(RecordSequencer):
             self.imageSet[ii,...] = self.image
 
             # save image
-            np.save(self.dataFolder + '/' + 'image' + f'_{ii:03d}',self.image)
+            # to speedup recording the saving is done at the end
+            #np.save(self.dataFolder + '/' + 'image' + f'_{ii:03d}',self.image)
+            
             yield
             # move stage
             self.stage.setParameter('position',initialPosition + (ii+1)*self.shiftVector)
@@ -74,10 +77,10 @@ class StageSequencer(RecordSequencer):
             # keybord abort of the action
             if keyboard.is_pressed('ctrl+q'):
                 print("Loop aborted")
+                break
 
-        # start the camera acquisition
-        self.camera.startAcquisition()
-
+            # save image set    
+            np.save(self.dataFolder + '/' + 'imageSet',self.imageSet)
 
 
 #%%

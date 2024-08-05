@@ -7,10 +7,12 @@ import numpy as np
 import time
 
 from viscope.gui.baseGUI import BaseGUI
-from viscope.gui.napariGUI import NapariGUI
-from magicgui import magicgui
 
-import pyqtgraph as pg
+from magicgui import magicgui
+from hmflux.algorithm.emitterImage import EmitterImage
+from hmflux.gui.emitterImageGUI import EmitterImageGUI
+
+
 
 class SeqStageGUI(BaseGUI):
     ''' main class to save image'''
@@ -51,16 +53,6 @@ class SeqStageGUI(BaseGUI):
             
             self.device.numberOfImage = numberOfImage
             self.device.shiftVector = np.array([stepX,stepY,0])
-
-            # create napari viewer if not existing
-            if self.viewer is None:
-                _vWindow = self.viscope.addViewerWindow()
-                newGUI  = NapariGUI(viscope=self.viscope,vWindow=_vWindow)
-                self.viewer = newGUI.viewer
-                # set napari layer
-                self.dataLayer = self.viewer.add_image(np.ones((2,2)),
-                                rgb=False, colormap="gray",
-                                name='data',  blending='additive')
             
             # pause camera threading if exist
             if self.device.camera.worker is not None:
@@ -75,11 +67,11 @@ class SeqStageGUI(BaseGUI):
             self.device.worker.finished.connect(self.afterProcess)
 
             # set roi if processor exist
-            if self.processor is not None:
-                self.device.roi = [self.processor.xPos,
-                                   self.processor.yPos,
-                                   self.processor.deltaX,
-                                   self.processor.deltaY]
+            if self.emitterDataGUI is not None and self.emitterDataGUI.device is not None:
+                self.device.roi = [self.emitterDataGUI.device.xPos,
+                                   self.emitterDataGUI.device.yPos,
+                                   self.emitterDataGUI.device.deltaX,
+                                   self.emitterDataGUI.device.deltaY]
 
             # start the sequencer
             self.device.worker.start()
@@ -88,39 +80,34 @@ class SeqStageGUI(BaseGUI):
         self.seqGui = seqGui
         self.vWindow.addParameterGui(self.seqGui,name=self.DEFAULT['nameGUI'])
  
-    def setDevice(self,device,processor = None):
+    def setDevice(self,device):
         super().setDevice(device)
         self.seqGui.filePath.value = Path(self.device.dataFolder).parent
         self.seqGui.fileName.value = str(Path(self.device.dataFolder).stem)
 
-        # if processor exist, than it defines the ROI for saving the image stack
-        self.processor = processor
-
-
     def updateGui(self):
         ''' update the data in gui '''
-        self.dataLayer.data = self.device.image
+        # update other gui as well
+        if self.emitterDataGUI is not None and self.emitterDataGUI.device is not None:
+            self.emitterDataGUI.device.flagToProcess.set()
+        if self.cameraViewGUI is not None:
+            self.cameraViewGUI.updateGui()
+
+    def interconnectGui(self,emitterDataGUI=None,cameraViewGUI=None):
+        ''' interconnect action with other GUI'''
+        self.emitterDataGUI = emitterDataGUI
+        self.cameraViewGUI = cameraViewGUI
 
     def afterProcess(self):
         ''' steps to do after the sequencer has finished'''
 
         # show the whole data
-        self.dataLayer.data = self.device.imageSet
-
-        # show the sum of the each image in imageset
-        #print(f'intensitySum= {intensitySum}')
-        intensitySum = np.sum(self.device.imageSet,axis=(1,2))
-        pg.plot(intensitySum)
-
+        eiGui = EmitterImageGUI(viscope=self.viscope,vWindow='new')
+        eiGui.setData(EmitterImage(self.device.imageSet))
 
         # resume working camera thread
         if self.device.camera.worker is not None:
-                self.device.camera.worker.resume()    
-        
-        self.viewer = None
-        
-
-
+                self.device.camera.worker.resume()        
 
 
 if __name__ == "__main__":

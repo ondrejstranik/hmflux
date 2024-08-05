@@ -12,6 +12,7 @@ import time
 import numpy as np
 from viscope.instrument.base.baseProcessor import BaseProcessor
 from hmflux.algorithm.emitterData import EmitterData
+from hmflux.algorithm.emitterImage import EmitterImage
 
 class HMFluxProcessor(BaseProcessor):
     ''' class to control processing of image and get the intensity value of the emitter'''
@@ -32,6 +33,8 @@ class HMFluxProcessor(BaseProcessor):
         
         # data container
         self.emitterData = EmitterData()
+        # class for calculating emitterData
+        self.emitterImage = EmitterImage()
 
         # calculation parameter
         self.xPos = HMFluxProcessor.DEFAULT['xPos']
@@ -65,11 +68,14 @@ class HMFluxProcessor(BaseProcessor):
         ''' process newly arrived data '''
         #print(f"processing data from {self.DEFAULT['name']}")
         newTime = time.time()
+
         try:
-            newSignal = np.sum(self.camera.rawImage[self.yPos:self.yPos+self.deltaY,
+            self.emitterImage.setImageSet(self.camera.rawImage[self.yPos:self.yPos+self.deltaY,
                                                     self.xPos:self.xPos+self.deltaX])
+            newSignal = self.emitterImage.getSignal()
         except:
             newSignal = 0
+        
         self.emitterData.addDataValue([newSignal],newTime)
 
         
