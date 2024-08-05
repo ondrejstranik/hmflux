@@ -87,6 +87,7 @@ def test_seqStageGUI():
     from viscope.instrument.virtual.virtualCamera import VirtualCamera
     from viscope.instrument.virtual.virtualSLM import VirtualSLM
     from viscope.instrument.virtual.virtualStage import VirtualStage
+    from viscope.instrument.virtual.virtualLaser import VirtualLaser    
 
     from viscope.main import viscope
     from hmflux.gui.seqStageGUI import SeqStageGUI
@@ -102,9 +103,11 @@ def test_seqStageGUI():
     # stage
     stage = VirtualStage(name='virtual Stage')
     stage.connect()
+    laser = VirtualLaser(name='virtual Laser')
+    stage.connect()
     # stage Sequencer
     seq = StageSequencer()
-    seq.connect(camera=camera, stage=stage,slm=slm)
+    seq.connect(camera=camera, stage=stage,slm=slm, laser=laser)
     
     # add gui
     newGUI  = SeqStageGUI(viscope)
@@ -118,6 +121,7 @@ def test_seqStageGUI():
     camera.disconnect()
     slm.disconnect()
     stage.disconnect()
+    laser.disconnect()
 
 @pytest.mark.GUI
 def test_emitterDataGUI():

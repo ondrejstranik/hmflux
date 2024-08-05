@@ -22,12 +22,11 @@ class RecordSequencer(BaseSequencer):
         if name== None: name= RecordSequencer.DEFAULT['name']
         super().__init__(name=name, **kwargs)
         
-        # camera
+        # devices
         self.camera = None
-        # stage
         self.stage = None
-        # slm
         self.slm = None
+        self.laser = None
 
         self.dataFolder = None
 
@@ -35,12 +34,13 @@ class RecordSequencer(BaseSequencer):
         self.roi = None
 
 
-    def connect(self,camera=None,stage=None,slm=None):
+    def connect(self,camera=None,stage=None,slm=None,laser=None):
         ''' connect sequencer with the camera, stage, slm '''
         super().connect()
         if camera is not None: self.setParameter('camera',camera)
         if stage is not None: self.setParameter('stage',stage)
         if slm is not None: self.setParameter('slm',slm)
+        if laser is not None: self.setParameter('laser',laser)
 
     def setParameter(self,name, value):
         ''' set parameter of the spectral camera'''
@@ -52,6 +52,8 @@ class RecordSequencer(BaseSequencer):
             self.stage = value
         if name== 'slm':
             self.slm = value
+        if name== 'laser':
+            self.laser = value
         if name== 'roi':
             self.roi = value
 
@@ -66,6 +68,9 @@ class RecordSequencer(BaseSequencer):
             return self.stage
         if name== 'slm':
             return self.slm
+        if name== 'laser':
+            return self.laser
+
         if name== 'roi':
             return self.roi
 
