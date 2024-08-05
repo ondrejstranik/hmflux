@@ -15,7 +15,8 @@ setuptools.setup(
     packages = setuptools.find_packages(),
     install_requires = [
         'pylablib',
-        'keyboard'],
+        'keyboard',
+        'microscope'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
