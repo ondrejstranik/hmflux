@@ -19,7 +19,8 @@ class StageSequencer(RecordSequencer):
     '''
     DEFAULT = {'name': 'StageSequencer',
                'numberOfImage': 10,
-               'shiftVector': np.array([1,0,0])}
+               'shiftVector': np.array([1,0,0]),
+               'laserPower': 100} # in mW
 
     def __init__(self, name=None, **kwargs):
         ''' initialisation '''
@@ -31,6 +32,7 @@ class StageSequencer(RecordSequencer):
         self.numberOfImage = StageSequencer.DEFAULT['numberOfImage']
         self.shiftVector = StageSequencer.DEFAULT['shiftVector']
         self.dataFolder = str(Path(hmflux.dataFolder).joinpath('dataset'))
+        self.laserPower = StageSequencer.DEFAULT['laserPower']
 
         self.image = None
         self.imageSet = None
@@ -47,6 +49,9 @@ class StageSequencer(RecordSequencer):
 
         initialPosition = self.stage.getParameter('position')
 
+        if self.laser is not None:
+            originalLaserPower = self.laser.getParameter('power')
+            self.laser.setParameter('power',self.laserPower)
 
         ''' finite loop of the sequence'''
         for ii in range(self.numberOfImage):
@@ -79,8 +84,12 @@ class StageSequencer(RecordSequencer):
                 print("Loop aborted")
                 break
 
-            # save image set    
-            np.save(self.dataFolder + '/' + 'imageSet',self.imageSet)
+
+        if self.laser is not None:
+            self.laser.setParameter('power',originalLaserPower)
+
+        # save image set    
+        np.save(self.dataFolder + '/' + 'imageSet',self.imageSet)
 
 
 #%%

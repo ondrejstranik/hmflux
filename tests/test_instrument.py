@@ -193,6 +193,25 @@ def test_hmfluxProcessor():
     hmfluxPro.disconnect()
     camera.disconnect()
 
+@pytest.mark.GUI
+def test_thorlabSwitch():
+    ''' check if thorlab switch in gui works'''
+    from hmflux.instrument.switch.throlabSwitch import ThrolabSwitch
 
+    from viscope.main import viscope
+    from viscope.gui.allDeviceGUI import AllDeviceGUI
+
+    switch = ThrolabSwitch()
+    switch.connect(port='COM3')
+    switch.positionList = ['OD1','OD2','OD3','OD4']
+
+    # add gui
+    viewer  = AllDeviceGUI(viscope)
+    viewer.setDevice(switch)
+
+    # main event loop
+    viscope.run()
+
+    stage.disconnect()
 
 
