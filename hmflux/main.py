@@ -38,8 +38,8 @@ class HMFlux():
         viscope.dataFolder = str(Path(r'E:\ZihaoData\DATA\PrimeBSI'))
 
         # stage
-        stage = SmarACTStage('stage')
-        stage.connect()
+        # stage = SmarACTStage('stage')
+        # stage.connect()
 
         # #camera
         # camera = AndorCamera(name='AndorCamera')
@@ -49,11 +49,11 @@ class HMFlux():
         # camera.setParameter('threadingNow',True)
 
         #camera
-        camera = TeledyneCamera(name='TeledyneCamera')
-        camera.connect()
-        camera.setParameter('exposureTime', 300)
-        camera.setParameter('nFrame', 1)
-        camera.setParameter('threadingNow',True)
+        # camera = TeledyneCamera(name='TeledyneCamera')
+        # camera.connect()
+        # camera.setParameter('exposureTime', 300)
+        # camera.setParameter('nFrame', 1)
+        # camera.setParameter('threadingNow',True)
 
         #camera 2
         camera2 = AVCamera(name='AVCamera')
@@ -76,34 +76,47 @@ class HMFlux():
         laser.connect()
 
         # stage Sequencer
-        seq = StageSequencer()
-        seq.connect(camera=camera, stage=stage,slm=slm,laser=laser)
+        # seq = StageSequencer()
+        # seq.connect(camera=camera2, stage=stage,slm=slm,laser=laser)
 
         # processor
+        # hmfluxPro = HMFluxProcessor()
+        # hmfluxPro.connect(camera=camera)
+        # hmfluxPro.setParameter('threadingNow', True)
+
         hmfluxPro = HMFluxProcessor()
-        hmfluxPro.connect(camera=camera)
+        hmfluxPro.connect(camera=camera2)
         hmfluxPro.setParameter('threadingNow', True)
 
         
         # set GUIs
+        # adGui = AllDeviceGUI(viscope)
+        # adGui.setDevice([stage,camera2,switch,laser])
         adGui = AllDeviceGUI(viscope)
-        adGui.setDevice([stage,camera2,switch,laser])
-        siGui = SaveImageGUI(viscope)
-        siGui.setDevice(camera)
+        #adGui.setDevice([camera2,switch,laser])
+        adGui.setDevice([switch,laser])
+        # siGui = SaveImageGUI(viscope)
+        # siGui.setDevice(camera)
+        siGui2 = SaveImageGUI(viscope,name='2Save')
+        siGui2.setDevice(camera2)
 
+        # cGui = CameraGUI(viscope,vWindow='new')
+        # cGui.setDevice(camera)
+        # cvGui = CameraViewGUI(viscope,vWindow=cGui.vWindow)
+        # cvGui.setDevice(camera)
         cGui = CameraGUI(viscope,vWindow='new')
-        cGui.setDevice(camera)
+        cGui.setDevice(camera2)
         cvGui = CameraViewGUI(viscope,vWindow=cGui.vWindow)
-        cvGui.setDevice(camera)
+        cvGui.setDevice(camera2)
         slmGui = SLMGUI(viscope,vWindow='new')
         slmGui.setDevice(slm)
         edGui  = EmitterDataGUI(viscope,vWindow='new')
         edGui.setDevice(hmfluxPro)
         edGui.interconnectGui(cameraViewGUI=cvGui)
     
-        ssGui  = SeqStageGUI(viscope)
-        ssGui.setDevice(seq)
-        ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
+        # ssGui  = SeqStageGUI(viscope)
+        # ssGui.setDevice(seq)
+        # ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
 
         # newGUI = AllDeviceGUI(viscope)
         # newGUI.setDevice([stage,camera2,switch,laser])
@@ -125,8 +138,9 @@ class HMFlux():
         # main event loop
         viscope.run()
 
-        camera.disconnect()
-        stage.disconnect()
+        # camera.disconnect()
+        # stage.disconnect()
+        camera2.disconnect()
         slm.disconnect()        
         laser.disconnect()    
         switch.disconnect()
