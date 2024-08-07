@@ -12,6 +12,9 @@ from hmflux.gui.slmGUI import SLMGUI
 from hmflux.gui.seqStageGUI import SeqStageGUI
 from hmflux.gui.emitterDataGUI import EmitterDataGUI
 
+from hmflux.PRIVATE.seqCameraGUI import SeqCameraGUI
+from hmflux.PRIVATE.seqSlmGUI import SeqSlmGUI
+
 from pathlib import Path
 
 class HMFlux():
@@ -32,6 +35,9 @@ class HMFlux():
         from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
         from hmflux.instrument.switch.throlabSwitch import ThrolabSwitch
         from hmflux.instrument.laser.coboltLaser import CoboltLaser
+
+        from hmflux.PRIVATE.cameraSequencer import CameraSequencer
+        from hmflux.PRIVATE.slmSequencerBi import SlmSequencerBi
 
         # some global settings
         # viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
@@ -78,6 +84,8 @@ class HMFlux():
         # stage Sequencer
         # seq = StageSequencer()
         # seq.connect(camera=camera2, stage=stage,slm=slm,laser=laser)
+        seq = CameraSequencer()
+        seq.connect(camera=camera2, slm=slm,laser=laser)
 
         # processor
         # hmfluxPro = HMFluxProcessor()
@@ -117,23 +125,9 @@ class HMFlux():
         # ssGui  = SeqStageGUI(viscope)
         # ssGui.setDevice(seq)
         # ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
-
-        # newGUI = AllDeviceGUI(viscope)
-        # newGUI.setDevice([stage,camera2,switch,laser])
-        # newGUI = SaveImageGUI(viscope)
-        # newGUI.setDevice(camera)
-        # newGUI  = SeqStageGUI(viscope)
-        # newGUI.setDevice(seq,processor=hmfluxPro)
-        # newGUI = CameraGUI(viscope,vWindow='new')
-        # newGUI.setDevice(camera)
-        # newGUI = CameraViewGUI(viscope,vWindow=newGUI.vWindow)
-        # newGUI.setDevice(camera)
-        # _viewer = newGUI.viewer
-        # newGUI = SLMGUI(viscope,vWindow='new')
-        # newGUI.setDevice(slm)
-        # newGUI  = EmitterDataGUI(viscope,vWindow='new')
-        # newGUI.setDevice(hmfluxPro)
-        # newGUI.connectViewer(_viewer)
+        ssGui  = SeqCameraGUI(viscope)
+        ssGui.setDevice(seq)
+        ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
 
         # main event loop
         viscope.run()

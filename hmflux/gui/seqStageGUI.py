@@ -39,7 +39,7 @@ class SeqStageGUI(BaseGUI):
                             fileIdx = {"label": "File Index"},
                 stepX={'min':-10,'max':10},
                 stepY={'min':-10,'max':10},
-                laserPower = {'max':250})
+                laserPower = {'max':240})
         def seqGui(filePath= Path(self.viscope.dataFolder),
                    fileName:str = 'dataset',
                    fileIdx=0,
