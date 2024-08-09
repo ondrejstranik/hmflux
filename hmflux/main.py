@@ -84,8 +84,8 @@ class HMFlux():
         # stage Sequencer
         # seq = StageSequencer()
         # seq.connect(camera=camera2, stage=stage,slm=slm,laser=laser)
-        seq = CameraSequencer()
-        seq.connect(camera=camera2, slm=slm,laser=laser)
+        seq = SlmSequencerBi()
+        seq.connect(camera=camera2,slm=slm,laser=laser)
 
         # processor
         # hmfluxPro = HMFluxProcessor()
@@ -125,7 +125,7 @@ class HMFlux():
         # ssGui  = SeqStageGUI(viscope)
         # ssGui.setDevice(seq)
         # ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
-        ssGui  = SeqCameraGUI(viscope)
+        ssGui  = SeqSlmGUI(viscope)
         ssGui.setDevice(seq)
         ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
 
