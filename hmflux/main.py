@@ -134,9 +134,9 @@ class HMFlux():
 
         # camera.disconnect()
         # stage.disconnect()
+        laser.disconnect()   
         camera2.disconnect()
         slm.disconnect()        
-        laser.disconnect()    
         switch.disconnect()
 
 

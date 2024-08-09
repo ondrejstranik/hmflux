@@ -52,6 +52,9 @@ class ScreenSLM(BaseSLM):
         self.image = image.astype('uint8')
         self.slm.updateArray(self.image)
 
+    #ZH:for acquire the size
+    def sizeSLM(self):
+        return(self.slm.getSize())
 
 
 if __name__ == '__main__':

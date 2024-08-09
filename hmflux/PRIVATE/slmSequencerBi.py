@@ -65,6 +65,7 @@ class SlmSequencerBi(RecordSequencer):
             self.laser.setParameter('power',self.laserPower)
 
         differenceTable = np.arange(self.initialDifference,self.valMax-self.valMin+1)
+        self.imageSLMGen.setSizeSLM(self.slm.sizeX,self.slm.sizeY)
         
         ''' finite loop of the sequence'''
         for differnece in differenceTable:
@@ -86,7 +87,7 @@ class SlmSequencerBi(RecordSequencer):
 
                 # add image to the imageSet
                 if value==self.valMin:
-                    self.imageSet = np.empty((np.shape(stepTable),*self.image.shape))
+                    self.imageSet = np.empty((np.shape(stepTable)[0],*self.image.shape))
                     ii = 0
                 self.imageSet[ii,...] = self.image
                 ii += 1
@@ -101,9 +102,10 @@ class SlmSequencerBi(RecordSequencer):
                 if keyboard.is_pressed('ctrl+q'):
                     print("Loop aborted")
                     break
-
+            if keyboard.is_pressed('ctrl+q'):
+                    print("Loop aborted")
+                    break
             np.save(self.dataFolder + '/' + f'imageSet{differnece}',self.imageSet)
-            np.save(self.dataFolder + '/' + f'slmImage{differnece}',slmImageBi)
             
     
 
