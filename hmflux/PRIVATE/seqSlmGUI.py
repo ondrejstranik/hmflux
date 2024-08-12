@@ -49,6 +49,7 @@ class SeqSlmGUI(BaseGUI):
                    val0: int = 0,
                    val1: int = 255,
                    initialDifference: int = 1,
+                   endDifference: int = 255,
                    axis: int = 0,
                    constantVal: int = 0,
                    laserPower: float = 10,
@@ -64,6 +65,7 @@ class SeqSlmGUI(BaseGUI):
             self.device.valMax = val1
             self.device.constantVal = constantVal
             self.device.initialDifference = initialDifference
+            self.device.endDifference = endDifference
             self.device.binaryAxis = axis
             self.device.laserPower = laserPower
 

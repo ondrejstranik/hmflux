@@ -24,6 +24,7 @@ class SlmSequencerBi(RecordSequencer):
                'valMin':0,
                'valMax':255,
                'initialDifference':1,
+               'endDifference':255,
                'constantVal':0,
                'binaryAxis':0,
                'laserPower': 100} # in mW
@@ -42,6 +43,7 @@ class SlmSequencerBi(RecordSequencer):
         self.valMin = SlmSequencerBi.DEFAULT['valMin']
         self.valMax = SlmSequencerBi.DEFAULT['valMax']
         self.initialDifference = SlmSequencerBi.DEFAULT['initialDifference']
+        self.endDifference = SlmSequencerBi.DEFAULT['endDifference']
 
         self.image = None
         self.imageSet = None
@@ -64,7 +66,7 @@ class SlmSequencerBi(RecordSequencer):
             originalLaserPower = self.laser.getParameter('power')
             self.laser.setParameter('power',self.laserPower)
 
-        differenceTable = np.arange(self.initialDifference,self.valMax-self.valMin+1)
+        differenceTable = np.arange(self.initialDifference,self.endDifference+1)
         self.imageSLMGen.setSizeSLM(self.slm.sizeX,self.slm.sizeY)
         
         ''' finite loop of the sequence'''
