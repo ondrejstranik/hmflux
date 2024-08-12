@@ -22,6 +22,7 @@ class AVCamera(BaseCamera):
                 'exposureTime': 10, # ms initially automatically set the exposure time
                 'nFrame': 1,
                 'idx': 0,
+                'blackLevel':5
 
 }
 
@@ -38,6 +39,8 @@ class AVCamera(BaseCamera):
         self.idx = idx if idx is not None else AVCamera.DEFAULT['idx']
         self.cam = None
         self.vmb = None
+
+        self.blackLevel = AVCamera.DEFAULT['blackLevel']
 
 
     def connect(self):
@@ -56,6 +59,9 @@ class AVCamera(BaseCamera):
         self.cam.get_feature_by_name('ExposureTime').set(self.exposureTime*1000)
         #self.cam.get_feature_by_name('ExposureAuto').set('Off')
         #self.cam.get_feature_by_name('ExposureMode').set('Timed')
+        
+        #ZH black level
+        self.cam.get_feature_by_name('BlackLevel').set(self.blackLevel)
 
 
     def disconnect(self):
