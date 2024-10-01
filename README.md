@@ -1,4 +1,4 @@
-# spectralCamera
+# hmflux
 Package for holominflux microscopy system
 Part of the viscope development tool.
 
