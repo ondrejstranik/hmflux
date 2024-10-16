@@ -11,7 +11,7 @@ class CoboltLaser(BaseLaser):
     DEFAULT = {'name':'coboltLaser',
                 'power': 0, #mW
                 'keySwitch': False,
-                'port': 'COM4',
+                'port': 'COM7',
                   } 
     
     def __init__(self,name=DEFAULT['name'], **kwargs):
