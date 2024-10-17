@@ -10,7 +10,7 @@ from microscope.filterwheels.thorlabs import ThorlabsFilterWheel
 class ThrolabSwitch(BaseSwitch):
     ''' main class to control a thorlab wheel switch'''
     DEFAULT = {'name':'thorlabFilterWheel',
-                'initialPosition':0,
+                'initialPosition':5,
                 'port': 'COM3'
                 }
 
