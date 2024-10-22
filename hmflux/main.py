@@ -29,7 +29,8 @@ class HMFlux():
         from hmflux.instrument.camera.andorCamera.andorCamera import AndorCamera
         from hmflux.instrument.camera.teledyneCamera.teledyneCamera import TeledyneCamera
         from hmflux.instrument.camera.avCamera.avCamera import AVCamera        
-        from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
+        # from hmflux.instrument.slm.screenSlm.screenSLM import ScreenSLM
+        from hmflux.instrument.slm.meadowSLM.meadowSLM import MeadowSLM
         from hmflux.instrument.stage.smarACT.smarACTStage import SmarACTStage
         from hmflux.instrument.stageSequencer import StageSequencer
         from hmflux.instrument.hmfluxProcessor import HMFluxProcessor
@@ -69,7 +70,8 @@ class HMFlux():
         camera2.setParameter('threadingNow',True)
 
         # slm
-        slm = ScreenSLM('slm')
+        # slm = ScreenSLM('slm')
+        slm = MeadowSLM('slm')
         slm.connect()
 
         # switch
