@@ -39,6 +39,7 @@ class HMFlux():
 
         from hmflux.PRIVATE.cameraSequencer import CameraSequencer
         from hmflux.PRIVATE.slmSequencerBi import SlmSequencerBi
+        from hmflux.PRIVATE.slmSequencerSlanted import SlmSequencerSlant
 
         # some global settings
         # viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
@@ -88,6 +89,8 @@ class HMFlux():
         # seq.connect(camera=camera2, stage=stage,slm=slm,laser=laser)
         seq = SlmSequencerBi()
         seq.connect(camera=camera2,slm=slm,laser=laser)
+        # seq = SlmSequencerSlant()
+        # seq.connect(camera=camera2,slm=slm,laser=laser)
 
         # processor
         # hmfluxPro = HMFluxProcessor()
