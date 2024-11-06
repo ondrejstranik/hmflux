@@ -5,8 +5,8 @@ import numpy as np
 from pathlib import Path
 import pyqtgraph as pg
 
-# path = r'.\hmflux\DATA\20240723-autoTest-1'
-path = r'E:\ZihaoData\DATA\PrimeBSI\20240801-horizontal_001'
+path = r'.\hmflux\DATA\dataset_000'
+# path = r'E:\ZihaoData\DATA\PrimeBSI\20240801-horizontal_001'
 # pathConsant = (path+'./'+'Binary')
 # pathBox = (path+'./'+'Box')
 # pathDark = (path+'./'+'Dark')

@@ -13,7 +13,8 @@ from hmflux.gui.seqStageGUI import SeqStageGUI
 from hmflux.gui.emitterDataGUI import EmitterDataGUI
 
 from hmflux.PRIVATE.seqCameraGUI import SeqCameraGUI
-from hmflux.PRIVATE.seqSlmGUI import SeqSlmGUI
+from hmflux.PRIVATE.seqSlmGUIBi import SeqSlmGUIBi
+from hmflux.PRIVATE.seqSlmGUISlant import SeqSlmGUISlant
 
 from pathlib import Path
 
@@ -87,10 +88,10 @@ class HMFlux():
         # stage Sequencer
         # seq = StageSequencer()
         # seq.connect(camera=camera2, stage=stage,slm=slm,laser=laser)
-        seq = SlmSequencerBi()
-        seq.connect(camera=camera2,slm=slm,laser=laser)
-        # seq = SlmSequencerSlant()
+        # seq = SlmSequencerBi()
         # seq.connect(camera=camera2,slm=slm,laser=laser)
+        seq = SlmSequencerSlant()
+        seq.connect(camera=camera2,slm=slm,laser=laser)
 
         # processor
         # hmfluxPro = HMFluxProcessor()
@@ -130,7 +131,7 @@ class HMFlux():
         # ssGui  = SeqStageGUI(viscope)
         # ssGui.setDevice(seq)
         # ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
-        ssGui  = SeqSlmGUI(viscope)
+        ssGui  = SeqSlmGUISlant(viscope)
         ssGui.setDevice(seq)
         ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
 

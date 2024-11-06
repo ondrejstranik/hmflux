@@ -101,9 +101,40 @@ class ImageSLM:
 
         return im
 
+    def generateSlanted3Grating(self,axis=0,val0=0,val1=78,val2=157):
+        ''' generate slanted three pixel grating
+        the values are 0, 2pi/3, 4pi/3'''
+        im  = np.zeros((self.sizeY,self.sizeX))+ val0
+        if axis == 0:
+            im[1::3,:]= val1
+            im[2::3,:]= val2
+        else:
+            im[:,1::3]= val1
+            im[:,2::3]= val2
+        self.image = self.clipValue(im)
+
+        return im
+
     def generateSlantedGrating(self,axis=0,val0=0,val1=63,val2=127,val3=191):
         ''' generate slanted four pixel grating
         it should make homogenous illumination, if the values are 0, pi/2, pi, 3/2*pi'''
+        im  = np.zeros((self.sizeY,self.sizeX))+ val0
+        if axis == 0:
+            im[1::4,:]= val1
+            im[2::4,:]= val2
+            im[3::4,:]= val3
+        else:
+            im[:,1::4]= val1
+            im[:,2::4]= val2
+            im[:,3::4]= val3
+        self.image = self.clipValue(im)
+
+        return im
+
+    def generateSlanted8Grating(self,axis=0,val0=0,val1=63,val2=127,val3=191):
+        ''' generate slanted eight pixel grating, the values are 0, pi/2, pi, 3/2*pi
+        but with the 0 pi modulation, one period plus 0, next period plus pi, then next
+        plus 0'''
         im  = np.zeros((self.sizeY,self.sizeX))+ val0
         if axis == 0:
             im[1::4,:]= val1
