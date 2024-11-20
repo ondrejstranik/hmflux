@@ -56,7 +56,9 @@ class SLMGUI(BaseGUI):
             lambda: self._liveUpdate() if self.liveUpdate else None)
         self.slmViewer.slanted3Gui.changed.connect(
             lambda: self._liveUpdate() if self.liveUpdate else None)
-        self.slmViewer.slantedGui.changed.connect(
+        self.slmViewer.slanted4Gui.changed.connect(
+            lambda: self._liveUpdate() if self.liveUpdate else None)
+        self.slmViewer.slanted6Gui.changed.connect(
             lambda: self._liveUpdate() if self.liveUpdate else None)
         self.slmViewer.slanted8Gui.changed.connect(
             lambda: self._liveUpdate() if self.liveUpdate else None)

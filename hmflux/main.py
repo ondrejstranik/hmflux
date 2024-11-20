@@ -15,6 +15,7 @@ from hmflux.gui.emitterDataGUI import EmitterDataGUI
 from hmflux.PRIVATE.seqCameraGUI import SeqCameraGUI
 from hmflux.PRIVATE.seqSlmGUIBi import SeqSlmGUIBi
 from hmflux.PRIVATE.seqSlmGUISlant import SeqSlmGUISlant
+from hmflux.PRIVATE.seqSlmGUISlant68 import SeqSlmGUISlant68
 
 from pathlib import Path
 
@@ -41,6 +42,7 @@ class HMFlux():
         from hmflux.PRIVATE.cameraSequencer import CameraSequencer
         from hmflux.PRIVATE.slmSequencerBi import SlmSequencerBi
         from hmflux.PRIVATE.slmSequencerSlanted import SlmSequencerSlant
+        from hmflux.PRIVATE.slmSequencerSlanted68 import SlmSequencerSlant68
 
         # some global settings
         # viscope.dataFolder = str(Path(__file__).parent.joinpath('DATA'))
@@ -90,7 +92,8 @@ class HMFlux():
         # seq.connect(camera=camera2, stage=stage,slm=slm,laser=laser)
         # seq = SlmSequencerBi()
         # seq.connect(camera=camera2,slm=slm,laser=laser)
-        seq = SlmSequencerSlant()
+        # seq = SlmSequencerSlant()
+        seq = SlmSequencerSlant68()
         seq.connect(camera=camera2,slm=slm,laser=laser)
 
         # processor
@@ -131,7 +134,7 @@ class HMFlux():
         # ssGui  = SeqStageGUI(viscope)
         # ssGui.setDevice(seq)
         # ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
-        ssGui  = SeqSlmGUISlant(viscope)
+        ssGui  = SeqSlmGUISlant68(viscope)
         ssGui.setDevice(seq)
         ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
 
@@ -226,7 +229,7 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    HMFlux.runReal()
-    # HMFlux.runVirtual()
+    # HMFlux.runReal()
+    HMFlux.runVirtual()
 
 #%%

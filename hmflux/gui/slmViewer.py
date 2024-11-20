@@ -54,24 +54,36 @@ class SLMViewer():
                                                       self.slanted3Gui.val1.value,
                                                       self.slanted3Gui.val2.value)
 
-        if self.imageType == 'slanted':
+        if self.imageType == 'slanted4':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
 
-            im += self.imageSLM.generateSlantedGrating(self.slantedGui.axis.value,
-                                                      self.slantedGui.val0.value,
-                                                      self.slantedGui.val1.value,
-                                                      self.slantedGui.val2.value,
-                                                      self.slantedGui.val3.value)
+            im += self.imageSLM.generateSlanted4Grating(self.slanted4Gui.axis.value,
+                                                      self.slanted4Gui.val0.value,
+                                                      self.slanted4Gui.val1.value,
+                                                      self.slanted4Gui.val2.value,
+                                                      self.slanted4Gui.val3.value)
+        
+        if self.imageType == 'slanted6':
+            #for 3 period with 0 pi period modulation
+            im = self.imageSLM.generateConstant(self.constGui.const.value)
+
+            im += self.imageSLM.generateSlanted6Grating(self.slanted6Gui.axis.value,
+                                                      self.slanted6Gui.val0.value,
+                                                      self.slanted6Gui.val1.value,
+                                                      self.slanted6Gui.val2.value,
+                                                      self.slanted6Gui.binaryVal.value)
+        
         
         if self.imageType == 'slanted8':
-            #for 4 period with 0 pi period modulation, now just copy from slanted
+            #for 4 period with 0 pi period modulation
             im = self.imageSLM.generateConstant(self.constGui.const.value)
 
             im += self.imageSLM.generateSlanted8Grating(self.slanted8Gui.axis.value,
                                                       self.slanted8Gui.val0.value,
                                                       self.slanted8Gui.val1.value,
                                                       self.slanted8Gui.val2.value,
-                                                      self.slanted8Gui.val3.value)
+                                                      self.slanted8Gui.val3.value,
+                                                      self.slanted8Gui.binaryVal.value)
 
         if self.imageType == 'binary':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
@@ -89,25 +101,33 @@ class SLMViewer():
                                                         self.binaryGui.rVal.value[0],
                                                         self.binaryGui.rVal.value[1])
             # add bright (slanted) backgound
-            if self.box1Gui.backgroundType.value == 'slanted':
-                im += self.imageSLM.generateSlantedGrating(1-self.box1Gui.axis.value,
-                                                        self.slantedGui.val0.value,
-                                                        self.slantedGui.val1.value,
-                                                        self.slantedGui.val2.value,
-                                                        self.slantedGui.val3.value)
+            if self.box1Gui.backgroundType.value == 'slanted4':
+                im += self.imageSLM.generateSlanted4Grating(1-self.box1Gui.axis.value,
+                                                        self.slanted4Gui.val0.value,
+                                                        self.slanted4Gui.val1.value,
+                                                        self.slanted4Gui.val2.value,
+                                                        self.slanted4Gui.val3.value)
                 
             if self.box1Gui.backgroundType.value == 'slanted3':
                 im += self.imageSLM.generateSlanted3Grating(1-self.box1Gui.axis.value,
-                                                        self.slantedGui.val0.value,
-                                                        self.slantedGui.val1.value,
-                                                        self.slantedGui.val2.value)
+                                                        self.slanted3Gui.val0.value,
+                                                        self.slanted3Gui.val1.value,
+                                                        self.slanted3Gui.val2.value)
+                
+            if self.box1Gui.backgroundType.value == 'slanted6':
+                im += self.imageSLM.generateSlanted6Grating(1-self.box1Gui.axis.value,
+                                                        self.slanted6Gui.val0.value,
+                                                        self.slanted6Gui.val1.value,
+                                                        self.slanted6Gui.val2.value,
+                                                        self.slanted6Gui.binaryVal.value)
                 
             if self.box1Gui.backgroundType.value == 'slanted8':
                 im += self.imageSLM.generateSlanted8Grating(1-self.box1Gui.axis.value,
-                                                        self.slantedGui.val0.value,
-                                                        self.slantedGui.val1.value,
-                                                        self.slantedGui.val2.value,
-                                                        self.slantedGui.val3.value)
+                                                        self.slanted8Gui.val0.value,
+                                                        self.slanted8Gui.val1.value,
+                                                        self.slanted8Gui.val2.value,
+                                                        self.slanted8Gui.val3.value,
+                                                        self.slanted8Gui.binaryVal.value)
 
             im = self.imageSLM.generateBox1(axis=self.box1Gui.axis.value,
                                             position=self.box1Gui.position.value,
@@ -138,7 +158,7 @@ class SLMViewer():
 
         @magicgui(auto_call='True',
                   imageType={
-        "choices": ("constant", "sinus", "binary", "slanted3", "slanted", "slanted8", "box1", "box2"),
+        "choices": ("constant", "sinus", "binary", "slanted3", "slanted4", "slanted6", "slanted8", "box1", "box2"),
         "allow_multiple": False,
         })
         def choiceGui(imageType=(self.imageType)):
@@ -173,7 +193,7 @@ class SLMViewer():
                 val1={"widget_type": "Slider", "max": 255},
                 val2={"widget_type": "Slider", "max": 255}
                 )
-        def slanted3Gui(axis=0,val0=0,val1=78,val2=157):
+        def slanted3Gui(axis=0,val0=0,val1=78,val2=154):
             self.generateImage()
 
         @magicgui(auto_call= 'True',
@@ -183,7 +203,7 @@ class SLMViewer():
                 val2={"widget_type": "Slider", "max": 255},
                 val3={"widget_type": "Slider", "max": 255}
                 )
-        def slantedGui(axis=0,val0=0,val1=63,val2=127,val3=191):
+        def slanted4Gui(axis=0,val0=0,val1=59,val2=118,val3=172):
             self.generateImage()
 
         @magicgui(auto_call= 'True',
@@ -191,15 +211,26 @@ class SLMViewer():
                 val0={"widget_type": "Slider", "max": 255},
                 val1={"widget_type": "Slider", "max": 255},
                 val2={"widget_type": "Slider", "max": 255},
-                val3={"widget_type": "Slider", "max": 255}
+                binaryVal={"widget_type": "Slider", "max": 255}
                 )
-        def slanted8Gui(axis=0,val0=0,val1=63,val2=127,val3=191):
+        def slanted6Gui(axis=0,val0=0,val1=78,val2=154,binaryVal=118):
+            self.generateImage()
+
+        @magicgui(auto_call= 'True',
+                axis={'max':1},
+                val0={"widget_type": "Slider", "max": 255},
+                val1={"widget_type": "Slider", "max": 255},
+                val2={"widget_type": "Slider", "max": 255},
+                val3={"widget_type": "Slider", "max": 255},
+                binaryVal={"widget_type": "Slider", "max": 255}
+                )
+        def slanted8Gui(axis=0,val0=0,val1=59,val2=118,val3=172,binaryVal=118):
             self.generateImage()
 
         @magicgui(auto_call= 'True',
                   axis = {"max":1},
                   backgroundType={
-                    "choices": ("constant", "binary","slanted3", "slanted", "slanted8"),
+                    "choices": ("constant", "binary", "slanted3", "slanted4", "slanted6", "slanted8"),
                     "allow_multiple": False,
                     },
                   position={"widget_type": "Slider", "max": self.imageSLM.sizeY},
@@ -243,7 +274,8 @@ class SLMViewer():
         self.sinWaveGui = sinWaveGui
         self.binaryGui = binaryGui
         self.slanted3Gui = slanted3Gui
-        self.slantedGui = slantedGui
+        self.slanted4Gui = slanted4Gui
+        self.slanted6Gui = slanted6Gui
         self.slanted8Gui = slanted8Gui
         self.constGui = constGui
         self.box1Gui = box1Gui
@@ -263,7 +295,10 @@ class SLMViewer():
         dw = self.viewer.window.add_dock_widget(self.slanted3Gui, name ='slanted3', area='bottom')
         self.viewer.window._qt_window.tabifyDockWidget(self.dockWidgetParameter,dw)
         self.dockWidgetParameter = dw
-        dw = self.viewer.window.add_dock_widget(self.slantedGui, name ='slanted', area='bottom')
+        dw = self.viewer.window.add_dock_widget(self.slanted4Gui, name ='slanted4', area='bottom')
+        self.viewer.window._qt_window.tabifyDockWidget(self.dockWidgetParameter,dw)
+        self.dockWidgetParameter = dw
+        dw = self.viewer.window.add_dock_widget(self.slanted6Gui, name ='slanted6', area='bottom')
         self.viewer.window._qt_window.tabifyDockWidget(self.dockWidgetParameter,dw)
         self.dockWidgetParameter = dw
         dw = self.viewer.window.add_dock_widget(self.slanted8Gui, name ='slanted8', area='bottom')
