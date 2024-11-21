@@ -229,7 +229,7 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    # HMFlux.runReal()
-    HMFlux.runVirtual()
+    HMFlux.runReal()
+    # HMFlux.runVirtual()
 
 #%%

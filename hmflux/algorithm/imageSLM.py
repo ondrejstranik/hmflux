@@ -74,8 +74,9 @@ class ImageSLM:
         return imageShifted
 
     def generateConstant(self,value=0):
-        self.image = self.clipValue(np.zeros((self.sizeY,self.sizeX)) + value)
-        return self.image
+        im = np.zeros((self.sizeY,self.sizeX)) + value
+        self.image = self.clipValue(im)
+        return im
 
     def generateSinGrating(self,axis=0,stepIdx=0,nStep=10,period=50, spectrumShift=0):
         ''' sinus grating'''
@@ -134,7 +135,7 @@ class ImageSLM:
     #internal use, clip the pi shift if it over 255 after adding
     def piClip(self,value,binaryVal):
         # piValue=118
-        pi2Value = 225
+        pi2Value = 225  #2pi 225
         # pi2Value = 198
         valTemp = value+binaryVal
         # clipedValue = valTemp if valTemp<255 else valTemp-pi2Value
