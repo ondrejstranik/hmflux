@@ -142,7 +142,7 @@ class ImageSLM:
         clipedValue = valTemp if valTemp<pi2Value else valTemp-pi2Value
         return clipedValue
     
-    def generateSlanted6Grating(self,axis=0,val0=0,val1=78,val2=154,binaryVal=118):
+    def generateSlanted6Grating(self,axis=0,val0=0,val1=78,val2=154,binaryVal=110):
         im = np.zeros((self.sizeY,self.sizeX))+ val0
         val01 = self.piClip(val0,binaryVal)
         val11 = self.piClip(val1,binaryVal)
@@ -163,7 +163,7 @@ class ImageSLM:
 
         return im
         
-    def generateSlanted8Grating(self,axis=0,val0=0,val1=59,val2=118,val3=172,binaryVal=118):
+    def generateSlanted8Grating(self,axis=0,val0=0,val1=59,val2=118,val3=172,binaryVal=110):
         ''' generate slanted eight pixel grating, the values are 0, pi/2, pi, 3/2*pi
         but with the 0 pi modulation, one period plus 0, next period plus pi, then next
         plus 0'''
@@ -192,7 +192,7 @@ class ImageSLM:
 
         return im
 
-    def generateBox1(self,axis=0,position= None, val0=0,val1=255,halfwidth=3,bcgImage=None):
+    def generateBox1(self,axis=0,position= None, val0=0,val1=255,halfwidth=3,slval0=0,slval1=78,slval2=154,bcgImage=None):
         ''' box generation for minima'''
 
         # define background
@@ -206,13 +206,33 @@ class ImageSLM:
             if axis == 0: position = self.sizeY//2
             else: position = self.sizeX//2
 
+        #calculate value with dip box
+        val00 = self.piClip(slval0,val0)  #0modulation+val0
+        val01 = self.piClip(slval1,val0)
+        val02 = self.piClip(slval2,val0)
+
+        val10 = self.piClip(slval0,val1)  #0modulation+val0
+        val11 = self.piClip(slval1,val1)
+        val12 = self.piClip(slval2,val1)
+
         if axis == 0:
-            im[position-halfwidth:position,:]= val0
-            im[position:position+halfwidth,:]= val1           
+            im[position-halfwidth:position,0::3]= val00
+            im[position-halfwidth:position,1::3]= val01
+            im[position-halfwidth:position,2::3]= val02
+
+            im[position:position+halfwidth,0::3]= val10
+            im[position:position+halfwidth,1::3]= val11
+            im[position:position+halfwidth,2::3]= val12
+ 
         else:
-            im[:,position-halfwidth:position]= val0
-            im[:,position:position+halfwidth]= val1 
-        
+            im[0::3,position-halfwidth:position]= val00
+            im[1::3,position-halfwidth:position]= val01
+            im[2::3,position-halfwidth:position]= val02
+
+            im[0::3,position:position+halfwidth]= val10
+            im[1::3,position:position+halfwidth]= val11
+            im[2::3,position:position+halfwidth]= val12
+
         self.image = self.clipValue(im)
 
         return im

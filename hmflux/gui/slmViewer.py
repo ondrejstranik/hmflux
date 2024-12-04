@@ -134,6 +134,9 @@ class SLMViewer():
                                             val0=self.box1Gui.rVal.value[0],
                                             val1=self.box1Gui.rVal.value[1],
                                             halfwidth=self.box1Gui.halfwidth.value,
+                                            slval0=self.slanted6Gui.val0.value,
+                                            slval1=self.slanted6Gui.val1.value,
+                                            slval2=self.slanted6Gui.val2.value,
                                             bcgImage=im)
             
         if self.imageType == 'box2':
@@ -213,7 +216,7 @@ class SLMViewer():
                 val2={"widget_type": "Slider", "max": 255},
                 binaryVal={"widget_type": "Slider", "max": 255}
                 )
-        def slanted6Gui(axis=0,val0=0,val1=78,val2=154,binaryVal=118):
+        def slanted6Gui(axis=0,val0=0,val1=78,val2=154,binaryVal=110):
             self.generateImage()
 
         @magicgui(auto_call= 'True',
@@ -224,7 +227,7 @@ class SLMViewer():
                 val3={"widget_type": "Slider", "max": 255},
                 binaryVal={"widget_type": "Slider", "max": 255}
                 )
-        def slanted8Gui(axis=0,val0=0,val1=59,val2=118,val3=172,binaryVal=118):
+        def slanted8Gui(axis=0,val0=0,val1=59,val2=118,val3=172,binaryVal=110):
             self.generateImage()
 
         @magicgui(auto_call= 'True',
