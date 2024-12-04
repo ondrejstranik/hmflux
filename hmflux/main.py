@@ -19,6 +19,10 @@ from hmflux.PRIVATE.seqSlmGUISlant68 import SeqSlmGUISlant68
 
 from pathlib import Path
 
+#profile
+from hmflux.instrument.hmfluxProcessorProfile import HMFluxProcessorProfile
+from hmflux.gui.emitterDataProfileGUI import EmitterDataProfileGUI
+
 class HMFlux():
     ''' base top class for control'''
 
@@ -104,7 +108,10 @@ class HMFlux():
         hmfluxPro = HMFluxProcessor()
         hmfluxPro.connect(camera=camera2)
         hmfluxPro.setParameter('threadingNow', True)
-
+        
+        hmfluxProfile = HMFluxProcessorProfile()
+        hmfluxProfile.connect(camera=camera2)
+        hmfluxProfile.setParameter('threadingNow', True)
         
         # set GUIs
         # adGui = AllDeviceGUI(viscope)
@@ -130,6 +137,10 @@ class HMFlux():
         edGui  = EmitterDataGUI(viscope,vWindow='new')
         edGui.setDevice(hmfluxPro)
         edGui.interconnectGui(cameraViewGUI=cvGui)
+
+        edqGui = EmitterDataProfileGUI(viscope,vWindow='new')
+        edqGui.setDevice(hmfluxProfile)
+        edqGui.interconnectGui(cameraViewGUI=cvGui)
     
         # ssGui  = SeqStageGUI(viscope)
         # ssGui.setDevice(seq)
@@ -196,6 +207,10 @@ class HMFlux():
         hmfluxPro.connect(camera=camera)
         hmfluxPro.setParameter('threadingNow', True)
 
+        hmfluxProfile = HMFluxProcessorProfile()
+        hmfluxProfile.connect(camera=camera)
+        hmfluxProfile.setParameter('threadingNow', True)
+
 
         # set GUIs
         adGui = AllDeviceGUI(viscope)
@@ -212,6 +227,10 @@ class HMFlux():
         edGui  = EmitterDataGUI(viscope,vWindow='new')
         edGui.setDevice(hmfluxPro)
         edGui.interconnectGui(cameraViewGUI=cvGui)
+
+        edpGui = EmitterDataProfileGUI(viscope,vWindow='new')
+        edpGui.setDevice(hmfluxProfile)
+        edpGui.interconnectGui(cameraViewGUI=cvGui)
     
         ssGui  = SeqStageGUI(viscope)
         ssGui.setDevice(seq)
@@ -226,10 +245,12 @@ class HMFlux():
         stage.disconnect()
         slm.disconnect()
 
+        hmfluxProfile.disconnet()
+
 
 if __name__ == "__main__":
 
-    HMFlux.runReal()
-    # HMFlux.runVirtual()
+    # HMFlux.runReal()
+    HMFlux.runVirtual()
 
 #%%
