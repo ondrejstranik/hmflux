@@ -112,7 +112,7 @@ class EmitterDataProfileGUI(BaseGUI):
         (signal, coordinateTable) = self.eD.getData()
         coordinateTable = coordinateTable.T
         coordinateTable = coordinateTable.reshape(np.shape(coordinateTable)[0])
-        print(coordinateTable)
+
         # if there is no signal then do not continue
         if signal is None:
             return
