@@ -6,7 +6,7 @@ import numpy  as np
 import napari
 import matplotlib.pyplot as plt
 
-fFolder = r'g:\office\work\projects - funded\23-02-24 holominflux\DATA\20241205_dip_homoillu_100mW10ms'
+fFolder = r'E:\ZihaoData\DATA\PrimeBSI\dip_newmethod_modulationOnBox\20241211_dip_mag1m_100mW35ms'
 
 fName = r'Image_0.npy'
 
@@ -21,7 +21,7 @@ viewer = napari.Viewer()
 viewer.add_image(im)
 
 #%% define slice
-pos = 1400
+pos = 600
 nAve = 3
 slice = np.mean(im[:,pos:pos+nAve], axis=1)
 

@@ -39,12 +39,14 @@ class EmitterDataProfileGUI(BaseGUI):
                   yPos={'max':10000},
                   length={'max':10000},
                   coordinate={'max':10000},
+                  aveWidth={'max':10000}, #width for calculate the average
                   axisDirection={'min':0,'max':1})
         def fitParameter(
             xPos: int = 0,
             yPos: int = 0,
             length: int = 20,
             coordinate: int = 0,
+            aveWidth: int = 0,
             axisDirection: int = 0  # 0 is Y, 1 is X
             ):
             self.device.xPos = xPos
@@ -57,7 +59,7 @@ class EmitterDataProfileGUI(BaseGUI):
             elif axisDirection == 1:
                 coordinate = xPos
                 self.device.coordinate = coordinate
-
+            self.device.aveWidth = aveWidth
             
             self.fitParameter._auto_call = False
             self.fitParameter.xPos.value = xPos
@@ -65,6 +67,7 @@ class EmitterDataProfileGUI(BaseGUI):
             self.fitParameter.length.value = length
             self.fitParameter.axisDirection.value = axisDirection
             self.fitParameter.coordinate.value = coordinate
+            self.fitParameter.aveWidth.value = aveWidth
             self.fitParameter._auto_call = True
 
 
@@ -92,6 +95,7 @@ class EmitterDataProfileGUI(BaseGUI):
         styles = {'color':'r', 'font-size':'20px'}
         self.graph.setLabel('left', 'Value', units='1')
         self.graph.setLabel('bottom', 'coordinate', units='1')
+        
 
         # fit parameter
         self.fitParameter = fitParameter
@@ -109,9 +113,17 @@ class EmitterDataProfileGUI(BaseGUI):
 
     def drawGraph(self):
         ''' draw all new lines in the graph'''
-        (signal, coordinateTable) = self.eD.getData()
+        (im1, coordinateTable) = self.eD.getData()
         coordinateTable = coordinateTable.T
         coordinateTable = coordinateTable.reshape(np.shape(coordinateTable)[0])
+        self.graph.setLabel('top',f'contrast: {1}')
+        im = np.array(im1)
+        if self.fitParameter.axisDirection.value == 0:
+            signalxPos = self.fitParameter.xPos.value
+            signal = im[self.fitParameter.aveWidth.value, signalxPos:signalxPos+self.fitParameter.length.value]
+        elif self.fitParameter.axisDirection.value == 1:
+            signalyPos = self.fitParameter.yPos.value
+            signal = im[self.fitParameter.aveWidth.value, signalyPos:signalyPos+self.fitParameter.length.value]
 
         # if there is no signal then do not continue
         if signal is None:

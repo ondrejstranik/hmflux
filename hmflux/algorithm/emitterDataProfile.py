@@ -53,10 +53,11 @@ class EmitterDataProfile:
             if (hasattr(self,'axis')  and self.signal.shape[0] == self.axis.shape[1]):
                 return (self.signal,self.axis)
             else:
+                print(0)
                 return (self.signal,np.arange(self.signal.shape[0]))
         else:
             return (None, None)
-
+#signal is none, fix it
 
     def clearData(self):
         ''' clear the data '''

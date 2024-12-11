@@ -128,16 +128,59 @@ class SLMViewer():
                                                         self.slanted8Gui.val2.value,
                                                         self.slanted8Gui.val3.value,
                                                         self.slanted8Gui.binaryVal.value)
-
-            im = self.imageSLM.generateBox1(axis=self.box1Gui.axis.value,
+                
+            if self.box1Gui.modulationType.value == 'constant':
+                im = self.imageSLM.generateBox1(axis=self.box1Gui.axis.value,
                                             position=self.box1Gui.position.value,
                                             val0=self.box1Gui.rVal.value[0],
                                             val1=self.box1Gui.rVal.value[1],
                                             halfwidth=self.box1Gui.halfwidth.value,
-                                            slval0=self.slanted6Gui.val0.value,
-                                            slval1=self.slanted6Gui.val1.value,
-                                            slval2=self.slanted6Gui.val2.value,
+                                            modulation=self.box1Gui.modulationType.value,
                                             bcgImage=im)
+
+            if self.box1Gui.modulationType.value == 'slanted3':
+                im = self.imageSLM.generateBox1(axis=self.box1Gui.axis.value,
+                                            position=self.box1Gui.position.value,
+                                            val0=self.box1Gui.rVal.value[0],
+                                            val1=self.box1Gui.rVal.value[1],
+                                            halfwidth=self.box1Gui.halfwidth.value,
+                                            modulation=self.box1Gui.modulationType.value,
+                                            slval0=self.slanted3Gui.val0.value,
+                                            slval1=self.slanted3Gui.val1.value,
+                                            slval2=self.slanted3Gui.val2.value,
+                                            bcgImage=im)
+                
+            if self.box1Gui.modulationType.value == 'slanted4':
+                im = self.imageSLM.generateBox1(axis=self.box1Gui.axis.value,
+                                            position=self.box1Gui.position.value,
+                                            val0=self.box1Gui.rVal.value[0],
+                                            val1=self.box1Gui.rVal.value[1],
+                                            halfwidth=self.box1Gui.halfwidth.value,
+                                            modulation=self.box1Gui.modulationType.value,
+                                            slval0=self.slanted4Gui.val0.value,
+                                            slval1=self.slanted4Gui.val1.value,
+                                            slval2=self.slanted4Gui.val2.value,
+                                            slval3=self.slanted4Gui.val3.value,
+                                            bcgImage=im)
+
+            if self.box1Gui.modulationType.value == 'binary2':
+                im = self.imageSLM.generateBox1(axis=self.box1Gui.axis.value,
+                                            position=self.box1Gui.position.value,
+                                            val0=self.box1Gui.rVal.value[0],
+                                            val1=self.box1Gui.rVal.value[1],
+                                            halfwidth=self.box1Gui.halfwidth.value,
+                                            modulation=self.box1Gui.modulationType.value,
+                                            bcgImage=im)
+
+            if self.box1Gui.modulationType.value == 'binary4':
+                im = self.imageSLM.generateBox1(axis=self.box1Gui.axis.value,
+                                            position=self.box1Gui.position.value,
+                                            val0=self.box1Gui.rVal.value[0],
+                                            val1=self.box1Gui.rVal.value[1],
+                                            halfwidth=self.box1Gui.halfwidth.value,
+                                            modulation=self.box1Gui.modulationType.value,
+                                            bcgImage=im)
+            
             
         if self.imageType == 'box2':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
@@ -236,11 +279,15 @@ class SLMViewer():
                     "choices": ("constant", "binary", "slanted3", "slanted4", "slanted6", "slanted8"),
                     "allow_multiple": False,
                     },
+                  modulationType={
+                    "choices": ("constant", "slanted3", "slanted4", "binary2", "binary4"),
+                    "allow_multiple": False,
+                  },
                   position={"widget_type": "Slider", "max": self.imageSLM.sizeY},
                   rVal={"widget_type": "RangeSlider", "max": 255},
                   halfwidth={"widget_type": "Slider", "max": self.imageSLM.sizeY//2}
                   )
-        def box1Gui(axis = 0,backgroundType= "binary",
+        def box1Gui(axis = 0,backgroundType= "constant", modulationType="slanted3",
                 position= self.imageSLM.sizeY//2, rVal = (0,255), halfwidth=3):
             
             if axis ==0 and box1Gui.position.max != self.imageSLM.sizeY:

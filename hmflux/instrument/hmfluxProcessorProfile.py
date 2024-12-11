@@ -20,6 +20,7 @@ class HMFluxProcessorProfile (BaseProcessor):
                'xPos': 0,
                'yPos': 0,
                'length': 20,
+               'aveWidth': 0,
                'axisDirection': 0,
                'coordinate': 0}
 
@@ -39,6 +40,7 @@ class HMFluxProcessorProfile (BaseProcessor):
         self.coordinate = HMFluxProcessorProfile.DEFAULT['coordinate']
         self.coordinateTable = np.arange(self.coordinate,self.coordinate+self.length)
         self.axisDirection = HMFluxProcessorProfile.DEFAULT['axisDirection']
+        self.aveWidth = HMFluxProcessorProfile.DEFAULT['aveWidth']
 
         # data container
         self.emitterDataProfile = EmitterDataProfile()
@@ -76,7 +78,7 @@ class HMFluxProcessorProfile (BaseProcessor):
             try:
                 self.coordinate = self.yPos
                 self.coordinateTable = np.arange(self.coordinate,self.coordinate+self.length)
-                self.emitterImageProfile.setImageSet(self.camera.rawImage[self.yPos,self.xPos:self.xPos+self.length])
+                self.emitterImageProfile.setImageSet(self.camera.rawImage[self.yPos-self.aveWidth:self.yPos+self.aveWidth, :])
                 newSignal = self.emitterImageProfile.getSignal()
             except:
                 newSignal = 0
@@ -84,8 +86,7 @@ class HMFluxProcessorProfile (BaseProcessor):
             try:
                 self.coordinate = self.xPos
                 self.coordinateTable = np.arange(self.coordinate,self.coordinate+self.length)
-                self.emitterImageProfile.setImageSet(self.camera.rawImage[self.yPos:self.yPos+self.length,
-                                                    self.xPos])
+                self.emitterImageProfile.setImageSet(self.camera.rawImage[:, self.xPos-self.aveWidth:self.xPos+self.aveWidth])
                 newSignal = self.emitterImageProfile.getSignal()
             except:
                 newSignal = 0

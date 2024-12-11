@@ -192,7 +192,7 @@ class ImageSLM:
 
         return im
 
-    def generateBox1(self,axis=0,position= None, val0=0,val1=255,halfwidth=3,slval0=0,slval1=78,slval2=154,bcgImage=None):
+    def generateBox1(self,axis=0,position= None,val0=0,val1=255,halfwidth=3,modulation='slanted3',slval0=0,slval1=78,slval2=154,slval3=None,bcgImage=None):
         ''' box generation for minima'''
 
         # define background
@@ -206,32 +206,108 @@ class ImageSLM:
             if axis == 0: position = self.sizeY//2
             else: position = self.sizeX//2
 
-        #calculate value with dip box
-        val00 = self.piClip(slval0,val0)  #0modulation+val0
-        val01 = self.piClip(slval1,val0)
-        val02 = self.piClip(slval2,val0)
-
-        val10 = self.piClip(slval0,val1)  #0modulation+val0
-        val11 = self.piClip(slval1,val1)
-        val12 = self.piClip(slval2,val1)
-
-        if axis == 0:
-            im[position-halfwidth:position,0::3]= val00
-            im[position-halfwidth:position,1::3]= val01
-            im[position-halfwidth:position,2::3]= val02
-
-            im[position:position+halfwidth,0::3]= val10
-            im[position:position+halfwidth,1::3]= val11
-            im[position:position+halfwidth,2::3]= val12
+        if modulation == 'constant':
+            if axis == 0:
+                im[position-halfwidth:position, :] = val0
+                im[position:position+halfwidth, :] = val1
+            else:
+                im[:, position-halfwidth:position] = val0
+                im[:, position:position+halfwidth] = val1
  
-        else:
-            im[0::3,position-halfwidth:position]= val00
-            im[1::3,position-halfwidth:position]= val01
-            im[2::3,position-halfwidth:position]= val02
+        if modulation == 'slanted3':
+            #calculate value with dip box
+            val00 = self.piClip(slval0,val0)  #0modulation+val0
+            val01 = self.piClip(slval1,val0)
+            val02 = self.piClip(slval2,val0)
 
-            im[0::3,position:position+halfwidth]= val10
-            im[1::3,position:position+halfwidth]= val11
-            im[2::3,position:position+halfwidth]= val12
+            val10 = self.piClip(slval0,val1)  #0modulation+val0
+            val11 = self.piClip(slval1,val1)
+            val12 = self.piClip(slval2,val1)
+
+            if axis == 0:
+                im[position-halfwidth:position,0::3]= val00
+                im[position-halfwidth:position,1::3]= val01
+                im[position-halfwidth:position,2::3]= val02
+
+                im[position:position+halfwidth,0::3]= val10
+                im[position:position+halfwidth,1::3]= val11
+                im[position:position+halfwidth,2::3]= val12
+ 
+            else:
+                im[0::3,position-halfwidth:position]= val00
+                im[1::3,position-halfwidth:position]= val01
+                im[2::3,position-halfwidth:position]= val02
+
+                im[0::3,position:position+halfwidth]= val10
+                im[1::3,position:position+halfwidth]= val11
+                im[2::3,position:position+halfwidth]= val12
+
+        if modulation == 'slanted4':
+            #calculate value with dip box
+            val00 = self.piClip(slval0,val0)  #0modulation+val0
+            val01 = self.piClip(slval1,val0)
+            val02 = self.piClip(slval2,val0)
+            val03 = self.piClip(slval3,val0)
+
+            val10 = self.piClip(slval0,val1)  #0modulation+val0
+            val11 = self.piClip(slval1,val1)
+            val12 = self.piClip(slval2,val1)
+            val13 = self.piClip(slval3,val1)
+
+            if axis == 0:
+                im[position-halfwidth:position,0::4]= val00
+                im[position-halfwidth:position,1::4]= val01
+                im[position-halfwidth:position,2::4]= val02
+                im[position-halfwidth:position,3::4]= val03
+
+                im[position:position+halfwidth,0::4]= val10
+                im[position:position+halfwidth,1::4]= val11
+                im[position:position+halfwidth,2::4]= val12
+                im[position:position+halfwidth,3::4]= val13
+ 
+            else:
+                im[0::4,position-halfwidth:position]= val00
+                im[1::4,position-halfwidth:position]= val01
+                im[2::4,position-halfwidth:position]= val02
+                im[3::4,position-halfwidth:position]= val03
+
+                im[0::4,position:position+halfwidth]= val10
+                im[1::4,position:position+halfwidth]= val11
+                im[2::4,position:position+halfwidth]= val12
+                im[3::4,position:position+halfwidth]= val13
+        
+        if modulation == 'binary2':
+            # only flip the value as pi
+            if axis == 0:
+                im[position-halfwidth:position, 0::2] = val0
+                im[position-halfwidth:position, 1::2] = val1
+                im[position:position+halfwidth, 0::2] = val1
+                im[position:position+halfwidth, 1::2] = val0
+            else:
+                im[0::2, position-halfwidth:position] = val1
+                im[1::2, position-halfwidth:position] = val0
+                im[0::2, position:position+halfwidth] = val0
+                im[1::2, position:position+halfwidth] = val1
+
+        if modulation == 'binary4':
+            if axis == 0:
+                im[position-halfwidth:position, 0::4] = val0
+                im[position-halfwidth:position, 1::4] = val0
+                im[position-halfwidth:position, 2::4] = val1
+                im[position-halfwidth:position, 3::4] = val1
+                im[position:position+halfwidth, 0::4] = val1
+                im[position:position+halfwidth, 1::4] = val1
+                im[position:position+halfwidth, 2::4] = val0
+                im[position:position+halfwidth, 3::4] = val0
+            else:
+                im[0::4, position-halfwidth:position] = val1
+                im[1::4, position-halfwidth:position] = val1
+                im[2::4, position-halfwidth:position] = val0
+                im[3::4, position-halfwidth:position] = val0
+                im[0::4, position:position+halfwidth] = val0
+                im[1::4, position:position+halfwidth] = val0
+                im[2::4, position:position+halfwidth] = val1
+                im[3::4, position:position+halfwidth] = val1
 
         self.image = self.clipValue(im)
 
