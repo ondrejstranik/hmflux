@@ -94,10 +94,10 @@ class HMFlux():
         # stage Sequencer
         # seq = StageSequencer()
         # seq.connect(camera=camera2, stage=stage,slm=slm,laser=laser)
-        # seq = SlmSequencerBi()
+        seq = SlmSequencerBi()
         # seq.connect(camera=camera2,slm=slm,laser=laser)
         # seq = SlmSequencerSlant()
-        seq = SlmSequencerSlant68()
+        # seq = SlmSequencerSlant68()
         seq.connect(camera=camera2,slm=slm,laser=laser)
 
         # processor
@@ -145,7 +145,8 @@ class HMFlux():
         # ssGui  = SeqStageGUI(viscope)
         # ssGui.setDevice(seq)
         # ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
-        ssGui  = SeqSlmGUISlant68(viscope)
+        ssGui = SeqSlmGUIBi(viscope)
+        # ssGui  = SeqSlmGUISlant68(viscope)
         ssGui.setDevice(seq)
         ssGui.interconnectGui(emitterDataGUI=edGui,cameraViewGUI=cvGui)
 
@@ -250,7 +251,7 @@ class HMFlux():
 
 if __name__ == "__main__":
 
-    # HMFlux.runReal()
-    HMFlux.runVirtual()
+    HMFlux.runReal()
+    # HMFlux.runVirtual()
 
 #%%

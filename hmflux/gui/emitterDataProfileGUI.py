@@ -11,6 +11,7 @@ from magicgui import magicgui
 import numpy as np
 from hmflux.algorithm.emitterDataProfile import EmitterDataProfile
 
+
 class EmitterDataProfileGUI(BaseGUI):
     ''' main class for viewing emitter signal'''
     DEFAULT = {'nameGUI':'Emitter Signal'}
@@ -27,6 +28,8 @@ class EmitterDataProfileGUI(BaseGUI):
         self.viewer = None
         self.maskLayer = None
         self.pointLayer = None
+
+        self.contrast = 0
 
         # set this gui of this class
         EmitterDataProfileGUI._setWidget(self)
@@ -96,6 +99,7 @@ class EmitterDataProfileGUI(BaseGUI):
         self.graph.setLabel('left', 'Value', units='1')
         self.graph.setLabel('bottom', 'coordinate', units='1')
         
+        
 
         # fit parameter
         self.fitParameter = fitParameter
@@ -113,26 +117,16 @@ class EmitterDataProfileGUI(BaseGUI):
 
     def drawGraph(self):
         ''' draw all new lines in the graph'''
-        (im1, coordinateTable) = self.eD.getData()
+        (signal, coordinateTable, self.contrast) = self.eD.getData()
+        self.graph.setLabel('top',f'contrast: {self.contrast}')
         coordinateTable = coordinateTable.T
         coordinateTable = coordinateTable.reshape(np.shape(coordinateTable)[0])
-        self.graph.setLabel('top',f'contrast: {1}')
-        im = np.array(im1)
-        if self.fitParameter.axisDirection.value == 0:
-            signalxPos = self.fitParameter.xPos.value
-            signal = im[self.fitParameter.aveWidth.value, signalxPos:signalxPos+self.fitParameter.length.value]
-        elif self.fitParameter.axisDirection.value == 1:
-            signalyPos = self.fitParameter.yPos.value
-            signal = im[self.fitParameter.aveWidth.value, signalyPos:signalyPos+self.fitParameter.length.value]
-
         # if there is no signal then do not continue
         if signal is None:
             return
 
         # remove all lines
         self.graph.clear()
-
-        offSet = np.zeros(signal.shape[1])
 
         #try:
             # draw lines
@@ -142,7 +136,7 @@ class EmitterDataProfileGUI(BaseGUI):
             #lineplot = self.graph.plot(pen= mypen)
             lineplot = self.graph.plot()
 
-            lineplot.setData(coordinateTable, signal[:,ii]-offSet[ii])
+            lineplot.setData(coordinateTable, signal[:,ii])
         #except:
         #    print('error occurred in drawSpectraGraph - pointSpectra')
 
@@ -200,16 +194,4 @@ if __name__ == "__main__":
 
         
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#%%

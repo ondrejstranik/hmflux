@@ -13,6 +13,7 @@ import numpy as np
 from viscope.instrument.base.baseProcessor import BaseProcessor
 from hmflux.algorithm.emitterDataProfile import EmitterDataProfile
 from hmflux.algorithm.emitterImageProfile import EmitterImageProfile
+from hmflux.PRIVATE.seeDip import SeeDip
 
 class HMFluxProcessorProfile (BaseProcessor):
     ''' class to control processing of image and get the intensity value of the emitter'''
@@ -33,6 +34,9 @@ class HMFluxProcessorProfile (BaseProcessor):
         # camera
         self.camera = None
 
+        self.seeDip = SeeDip()
+        self.contrast = 0
+
         # calculation parameter
         self.xPos = HMFluxProcessorProfile.DEFAULT['xPos']
         self.yPos = HMFluxProcessorProfile.DEFAULT['yPos']
@@ -41,6 +45,8 @@ class HMFluxProcessorProfile (BaseProcessor):
         self.coordinateTable = np.arange(self.coordinate,self.coordinate+self.length)
         self.axisDirection = HMFluxProcessorProfile.DEFAULT['axisDirection']
         self.aveWidth = HMFluxProcessorProfile.DEFAULT['aveWidth']
+
+        self.seeDip.setnAve(self.aveWidth)
 
         # data container
         self.emitterDataProfile = EmitterDataProfile()
@@ -71,27 +77,34 @@ class HMFluxProcessorProfile (BaseProcessor):
 
     def processData(self):
         ''' process newly arrived data '''
-        #print(f"processing data from {self.DEFAULT['name']}")
-        
+        #print(f"processing data from {self.DEFAULT['name']}")    
 
         if self.axisDirection == 0:
             try:
                 self.coordinate = self.yPos
                 self.coordinateTable = np.arange(self.coordinate,self.coordinate+self.length)
-                self.emitterImageProfile.setImageSet(self.camera.rawImage[self.yPos-self.aveWidth:self.yPos+self.aveWidth, :])
+                self.emitterImageProfile.setImageSet(self.camera.rawImage[self.yPos:self.yPos+self.aveWidth+1, :])
+                contrastData = self.emitterImageProfile.getSignal()
+                # maybe initialization problem, cannot calculate at the begining, throw the tuple out of index error
+                # self.contrast = self.seeDip.calContrast(im=contrastData, axis=self.axisdirection)
+                self.emitterImageProfile.setImageSet(self.camera.rawImage[self.yPos,self.xPos:self.xPos+self.length])
                 newSignal = self.emitterImageProfile.getSignal()
             except:
+                # print(11)
                 newSignal = 0
         elif self.axisDirection == 1:
             try:
                 self.coordinate = self.xPos
                 self.coordinateTable = np.arange(self.coordinate,self.coordinate+self.length)
-                self.emitterImageProfile.setImageSet(self.camera.rawImage[:, self.xPos-self.aveWidth:self.xPos+self.aveWidth])
+                self.emitterImageProfile.setImageSet(self.camera.rawImage[:, self.xPos:self.xPos+self.aveWidth+1])
+                contrastData = self.emitterImageProfile.getSignal()
+                self.contrast = self.seeDip.calContrast(contrastData, self.axisDirection)
+                self.emitterImageProfile.setImageSet(self.camera.rawImage[self.yPos:self.yPos+self.length, self.xPos])
                 newSignal = self.emitterImageProfile.getSignal()
             except:
                 newSignal = 0
 
-        self.emitterDataProfile.addDataValue([newSignal],axis=self.coordinateTable)
+        self.emitterDataProfile.addDataValue(valueVector=[newSignal], contarst=self.contrast, axis=self.coordinateTable)
 
         
 

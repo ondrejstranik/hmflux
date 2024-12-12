@@ -75,7 +75,7 @@ class SlmSequencerBi(RecordSequencer):
             for value in stepTable:
                 print(f'recording {value} image')
                 slmImageBi = self.imageSLMGen.generateConstant(self.constantVal)
-                slmImageBi += self.imageSLMGen.generateBinaryGrating(self.binaryAxis,value,value+differnece)
+                slmImageBi += self.imageSLMGen.generateBinaryGrating(self.binaryAxis,value,value+differnece,'period4')
                 self.slm.setImage(slmImageBi)
                 # get image
                 self.camera.startAcquisition()

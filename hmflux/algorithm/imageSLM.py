@@ -91,14 +91,23 @@ class ImageSLM:
         self.image = self.clipValue(im)
         return im
 
-    def generateBinaryGrating(self,axis=0,val0=0,val1=255):
+    def generateBinaryGrating(self,axis=0,val0=0,val1=255, period='period2'):
         ''' binary grating '''
         
         im  = np.zeros((self.sizeY,self.sizeX))+ val0
-        if axis == 0:
-            im[::2,:]= val1
-        else:
-            im[:,::2]= val1
+        if period == 'period2':
+            if axis == 0:
+                im[::2,:]= val1
+            else:
+                im[:,::2]= val1
+        if period == 'period4':
+            if axis == 0:
+                im[2::4,:]= val1
+                im[3::4,:]= val1
+            else:
+                im[:,2::4]= val1
+                im[:,3::4]= val1
+
         self.image = self.clipValue(im)
         return im
 

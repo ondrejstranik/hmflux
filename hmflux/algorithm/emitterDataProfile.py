@@ -16,6 +16,7 @@ class EmitterDataProfile:
         #TODO: implement signal and time definition for a single values. 
 
         self.signal = None # numpy array, each column represent signal from one spot
+        self.contrast = 0
         
         if signal is not None: self.signal = np.array(signal)  
         if axis is not None: self.axis = np.array(axis) # corresponding axis point
@@ -29,10 +30,10 @@ class EmitterDataProfile:
         self.axis = np.array(axis) if axis is not None else np.arange(self.signal.shape[0])  # corresponding axis point
         self.axis0 = self.axis[0]
 
-    def addDataValue(self, valueVector,axis=None):
+    def addDataValue(self, valueVector, contarst, axis=None):
         ''' add value list to the signal
             return axis0 if data are reset'''
-        
+        self.contrast = contarst
         valueVector = np.array(valueVector)
         if self.signal is not None and valueVector.shape[0] == self.signal.shape[1]:
             self.signal = valueVector.T
@@ -51,13 +52,11 @@ class EmitterDataProfile:
         ''' return the signal and coordinate '''
         if self.signal is not None:
             if (hasattr(self,'axis')  and self.signal.shape[0] == self.axis.shape[1]):
-                return (self.signal,self.axis)
+                return (self.signal,self.axis, self.contrast)
             else:
-                print(0)
-                return (self.signal,np.arange(self.signal.shape[0]))
+                return (self.signal,np.arange(self.signal.shape[0]), self.contrast)
         else:
             return (None, None)
-#signal is none, fix it
 
     def clearData(self):
         ''' clear the data '''

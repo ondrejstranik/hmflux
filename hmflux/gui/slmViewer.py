@@ -87,10 +87,12 @@ class SLMViewer():
 
         if self.imageType == 'binary':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
-
+            
             im += self.imageSLM.generateBinaryGrating(self.binaryGui.axis.value,
                                                       self.binaryGui.rVal.value[0],
-                                                      self.binaryGui.rVal.value[1])
+                                                      self.binaryGui.rVal.value[1],
+                                                      self.binaryGui.period.value)
+                
 
         if self.imageType == 'box1':
             im = self.imageSLM.generateConstant(self.constGui.const.value)
@@ -228,9 +230,10 @@ class SLMViewer():
             self.generateImage()
 
         @magicgui(auto_call= 'True',
+                  period={'choices':('period2', 'period4'), "allow_multiple": False,},
                   axis = {"max":1},
                   rVal={"widget_type": "RangeSlider", "max": 255})
-        def binaryGui(axis = 0, rVal = (0,255)):
+        def binaryGui(axis = 0, rVal = (0,255), period = 'period2'):
             self.generateImage()
 
         @magicgui(auto_call= 'True',
