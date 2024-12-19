@@ -22,9 +22,9 @@ class SlmSequencerBi(RecordSequencer):
     DEFAULT = {'name': 'SlmSequencerBi',
                'shiftVector': np.array([1,0,0]),
                'valMin':0,
-               'valMax':255,
-               'initialDifference':1,
-               'endDifference':255,
+               'valMax':255,  
+               'initialDifference':1,  # the phase difference between initial and end
+               'endDifference':255,  #adjust these two value to change the phase range you want to measure
                'constantVal':0,
                'binaryAxis':0,
                'laserPower': 100} # in mW
