@@ -93,7 +93,7 @@ class MeadowSLM(BaseSLM):
         # Both pulse options can be false, but only one can be true. You either generate a pulse when the new image begins loading to the SLM
         # or every 1.184 ms on SLM refresh boundaries, or if both are false no output pulse is generated.
         self.OutputPulseImageFlip = c_uint(0)
-        self.OutputPulseImageRefresh = c_uint(0); #only supported on 1920x1152, FW rev 1.8. 
+        self.OutputPulseImageRefresh = c_uint(0) #; #only supported on 1920x1152, FW rev 1.8. 
 
 
     def connect(self,**kwargs):

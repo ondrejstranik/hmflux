@@ -78,8 +78,8 @@ class HMFlux():
         camera2.setParameter('threadingNow',True)
 
         # slm
-        slm = ScreenSLM('slm')
-        # slm = MeadowSLM('slm')
+        # slm = ScreenSLM('slm')
+        slm = MeadowSLM('slm')
         slm.connect()
 
         # switch
@@ -153,11 +153,11 @@ class HMFlux():
         # main event loop
         viscope.run()
 
+        slm.disconnect()     
         # camera.disconnect()
         # stage.disconnect()
         laser.disconnect()   
         camera2.disconnect()
-        slm.disconnect()        
         switch.disconnect()
 
 
